@@ -88,8 +88,14 @@ NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=your_password
 ```
+### 4. Install Neo4j
 
-### 4. Start Neo4j
+Download and install Neo4j desktop from the following website:  
+[neo4j](https://neo4j.com/download/)
+
+Then open Neo4j and create a local instance with the same username/password as in the .env file.
+
+### 5. Start Neo4j
 
 ## Usage
 
