@@ -15,7 +15,7 @@ Graph Structure:
 from __future__ import annotations
 
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 from neo4j import GraphDatabase
 
 from src.config.settings import get_neo4j_config
@@ -314,6 +314,8 @@ def run_pipeline(
     max_competitors: int = 10,
     industry: str = "process industries",
     max_iterations: int = 25,
+    allowed_domains: List[str] | None = None,
+    allowed_source_types: List[str] | None = None,
     incremental: bool = False,
 ) -> Dict[str, Any]:
     """
@@ -332,6 +334,8 @@ def run_pipeline(
     print(f"   Target: {target_company} {target_product}")
     print(f"   Industry: {industry}")
     print(f"   Max competitors: {max_competitors}")
+    print(f"   Allowed domains: {allowed_domains or 'Any'}")
+    print(f"   Allowed source types: {allowed_source_types or 'Any'}")
     print("="*60)
     
     # Always reset unless incremental
@@ -341,7 +345,13 @@ def run_pipeline(
     
     # Run research
     print("\n📊 Researching competitors...")
-    data = run_agent(max_competitors=max_competitors, industry=industry, max_iterations=max_iterations)
+    data = run_agent(
+        max_competitors=max_competitors,
+        industry=industry,
+        max_iterations=max_iterations,
+        allowed_domains=allowed_domains,
+        allowed_source_types=allowed_source_types,
+    )
     
     # Write directly to Neo4j
     print("\n📝 Writing to Neo4j...")

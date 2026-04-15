@@ -20,6 +20,7 @@ import re
 from datetime import datetime
 from typing import Any, Dict, List, Annotated, TypedDict, Literal
 from operator import add
+from urllib.parse import urlparse
 
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
@@ -30,6 +31,7 @@ from tavily import TavilyClient
 
 from src.config.settings import get_openai_api_key, get_tavily_api_key
 from src.pipeline.chroma_store import chunk_and_store, get_chunk_by_id
+from src.prompts import build_poml_prompt
 
 
 # =============================================================================
@@ -131,6 +133,10 @@ class ToolState:
         self.segments_sources: List[str] = []  # URLs used to find customer segments
         self.segment_mappings: List[Dict] = []  # [{segment, product, reason, evidence_ids}]
         self.house_of_quality: Dict = {}  # {whats, hows, matrix, competitive_analysis, reasoning}
+        self.source_selection: Dict[str, List[str]] = {
+            "allowed_domains": [],
+            "allowed_source_types": [],
+        }
         self.finished: bool = False
     
     def summary(self) -> str:
@@ -183,13 +189,32 @@ def search_web(query: str) -> str:
         response = client.search(query=query, max_results=5, search_depth="advanced")
         
         results = []
+        allowed_domains = _tool_state.source_selection.get("allowed_domains", [])
+        allowed_source_types = _tool_state.source_selection.get("allowed_source_types", [])
         for r in response.get("results", []):
+            url = r.get("url", "")
+            title = r.get("title", "")
+            snippet = r.get("content", "")[:500]
+            if not _passes_source_selection(
+                url=url,
+                title=title,
+                snippet=snippet,
+                allowed_domains=allowed_domains,
+                allowed_source_types=allowed_source_types,
+            ):
+                continue
+            inferred_type = _infer_source_type(url=url, title=title, snippet=snippet)
             results.append({
                 "title": r.get("title", ""),
-                "url": r.get("url", ""),
-                "snippet": r.get("content", "")[:500]
+                "url": url,
+                "snippet": snippet,
+                "source_type": inferred_type,
             })
-        
+        if not results:
+            return (
+                "No results matched current source selection. "
+                f"{_source_selection_summary()}"
+            )
         return json.dumps(results, indent=2)
     except Exception as e:
         return f"Search error: {e}"
@@ -215,6 +240,12 @@ def extract_page_content(url: str) -> str:
     
     if len(_tool_state.extracted_urls) >= 20:
         return "LIMIT REACHED: You have extracted 20 pages. Use the information you have or call finish_research."
+    allowed_domains = _tool_state.source_selection.get("allowed_domains", [])
+    if not _is_url_allowed(url, allowed_domains):
+        return (
+            "URL blocked by source selection. "
+            f"Allowed domains: {allowed_domains}"
+        )
     
     _tool_state.extracted_urls.append(url)
     print(f"📄 AGENT DECIDED: extract_page_content('{url[:60]}...')")
@@ -252,6 +283,54 @@ Use these to link extracted data to source evidence."""
     except Exception as e:
         print(f"   ❌ Extract error: {e}")
         return f"Extract error: {e}"
+
+
+@tool
+def set_source_selection(
+    allowed_domains: List[str] | None = None,
+    allowed_source_types: List[str] | None = None,
+) -> str:
+    """
+    Configure source restrictions for web research.
+
+    Args:
+        allowed_domains: Optional list of website domains to allow.
+            Examples: ["emerson.com", "siemens.com", "isa.org"].
+        allowed_source_types: Optional list of source categories to allow.
+            Supported values: datasheet, documentation, manual, news, blog,
+            report, marketplace, regulatory.
+
+    Returns:
+        Confirmation summary of active source restrictions.
+    """
+    global _tool_state
+    normalized_domains = []
+    if allowed_domains:
+        normalized_domains = sorted(
+            {
+                _normalize_domain(d)
+                for d in allowed_domains
+                if _normalize_domain(d)
+            }
+        )
+    normalized_types = []
+    invalid_types = []
+    if allowed_source_types:
+        normalized_types = sorted(
+            {
+                (source_type or "").strip().lower()
+                for source_type in allowed_source_types
+                if (source_type or "").strip()
+            }
+        )
+        invalid_types = [t for t in normalized_types if t not in ALLOWED_SOURCE_TYPES]
+        normalized_types = [t for t in normalized_types if t in ALLOWED_SOURCE_TYPES]
+    _tool_state.source_selection = {
+        "allowed_domains": normalized_domains,
+        "allowed_source_types": normalized_types,
+    }
+    invalid_msg = f" Ignored invalid source types: {invalid_types}." if invalid_types else ""
+    return f"Source selection updated. {_source_selection_summary()}.{invalid_msg}"
 
 
 @tool
@@ -462,6 +541,83 @@ DO NOT finish yet!"""
 MAX_CUSTOMER_NEEDS = 15
 MAX_NEED_MAPPINGS = 30
 NUM_SOURCES_FOR_REPORT = 8  # Number of sources to use for the report
+ALLOWED_SOURCE_TYPES = {
+    "datasheet",
+    "documentation",
+    "manual",
+    "news",
+    "blog",
+    "report",
+    "marketplace",
+    "regulatory",
+}
+
+
+def _normalize_domain(domain: str) -> str:
+    """Normalize domains so matching is consistent."""
+    normalized = (domain or "").strip().lower()
+    normalized = normalized.replace("https://", "").replace("http://", "")
+    normalized = normalized.split("/")[0]
+    if normalized.startswith("www."):
+        normalized = normalized[4:]
+    return normalized
+
+
+def _infer_source_type(url: str, title: str = "", snippet: str = "") -> str:
+    """Infer source type from URL/title/snippet heuristics."""
+    text = f"{url} {title} {snippet}".lower()
+    type_rules = {
+        "datasheet": ["datasheet", ".pdf", "spec-sheet", "technical-data"],
+        "documentation": ["documentation", "docs", "knowledge-base"],
+        "manual": ["manual", "user-guide", "installation-guide", "brochure"],
+        "news": ["news", "press-release", "press", "/news/"],
+        "blog": ["blog", "/blog/", "insights", "thought-leadership"],
+        "report": ["report", "whitepaper", "market-analysis", "study"],
+        "marketplace": ["amazon.", "grainger.", "mcmaster.", "marketplace", "shop"],
+        "regulatory": ["iso", "iec", "api", "osha", "asme", "regulation", "standard"],
+    }
+    for source_type, markers in type_rules.items():
+        if any(marker in text for marker in markers):
+            return source_type
+    return "documentation"
+
+
+def _is_url_allowed(url: str, allowed_domains: List[str]) -> bool:
+    """Check whether URL matches the configured domain restrictions."""
+    if not allowed_domains:
+        return True
+    parsed_domain = _normalize_domain(urlparse(url).netloc)
+    return any(
+        parsed_domain == allowed or parsed_domain.endswith(f".{allowed}")
+        for allowed in allowed_domains
+    )
+
+
+def _passes_source_selection(
+    *,
+    url: str,
+    title: str = "",
+    snippet: str = "",
+    allowed_domains: List[str],
+    allowed_source_types: List[str],
+) -> bool:
+    """Validate result against current source selection rules."""
+    if not _is_url_allowed(url, allowed_domains):
+        return False
+    if not allowed_source_types:
+        return True
+    inferred_type = _infer_source_type(url=url, title=title, snippet=snippet)
+    return inferred_type in allowed_source_types
+
+
+def _source_selection_summary() -> str:
+    """Human-readable summary for logs and prompts."""
+    global _tool_state
+    domains = _tool_state.source_selection.get("allowed_domains", [])
+    source_types = _tool_state.source_selection.get("allowed_source_types", [])
+    domains_text = ", ".join(domains) if domains else "Any domain"
+    types_text = ", ".join(source_types) if source_types else "Any source type"
+    return f"Domains: {domains_text} | Source types: {types_text}"
 
 
 @tool
@@ -495,19 +651,28 @@ def research_industry_needs(industry: str) -> str:
     
     # LLM generates search queries based on the industry (agentic approach)
     llm = get_llm()
-    query_prompt = f"""You are researching customer needs for pressure transmitters in the {industry} industry.
-
-Generate 5-6 diverse search queries that will help find:
-- Industry-specific challenges and pain points
-- Technical requirements (accuracy, pressure ranges, certifications)
-- Equipment selection criteria
-- Real-world application requirements
-- Regulatory/safety requirements
-
-Return ONLY a JSON array of search query strings. Example:
-["query 1", "query 2", "query 3", "query 4", "query 5"]
-
-Make queries specific to {industry} - don't be generic."""
+    query_prompt = build_poml_prompt(
+        role="Research assistant for industrial instrumentation markets",
+        objective="Generate diverse web search queries for customer needs research",
+        context={
+            "industry": industry,
+            "domain": "pressure transmitters",
+        },
+        instructions=[
+            "Generate 5-6 diverse search queries.",
+            "Cover industry-specific challenges and pain points.",
+            "Cover technical requirements such as accuracy, pressure ranges, and certifications.",
+            "Cover equipment selection criteria and real-world application requirements.",
+            "Cover regulatory and safety requirements.",
+            "Make each query specific to the provided industry.",
+        ],
+        constraints=[
+            "Do not return generic, cross-industry queries.",
+            "Return only valid JSON.",
+            "Output must be a JSON array of strings.",
+        ],
+        output_format='["query 1", "query 2", "query 3", "query 4", "query 5"]',
+    )
 
     print(f"   🤖 LLM generating search queries for {industry}...")
     try:
@@ -535,6 +700,8 @@ Make queries specific to {industry} - don't be generic."""
         ]
     
     all_urls = []
+    allowed_domains = _tool_state.source_selection.get("allowed_domains", [])
+    allowed_source_types = _tool_state.source_selection.get("allowed_source_types", [])
     for query in search_queries:
         _tool_state.searched_queries.append(query)
         print(f"   🔍 Searching: '{query}'")
@@ -542,7 +709,20 @@ Make queries specific to {industry} - don't be generic."""
             response = client.search(query=query, max_results=5, search_depth="advanced")
             for r in response.get("results", []):
                 url = r.get("url", "")
-                if url and url not in all_urls and url not in _tool_state.extracted_urls:
+                title = r.get("title", "")
+                snippet = r.get("content", "")[:500]
+                if (
+                    url
+                    and url not in all_urls
+                    and url not in _tool_state.extracted_urls
+                    and _passes_source_selection(
+                        url=url,
+                        title=title,
+                        snippet=snippet,
+                        allowed_domains=allowed_domains,
+                        allowed_source_types=allowed_source_types,
+                    )
+                ):
                     all_urls.append(url)
         except Exception as e:
             print(f"   ⚠️ Search error: {e}")
@@ -583,35 +763,30 @@ Make queries specific to {industry} - don't be generic."""
     llm = get_llm()
     combined_content = "\n\n---\n\n".join(all_content)[:10000]  # Reduced context for faster response
     
-    report_prompt = f"""You are an industry analyst. Based on the following {len(sources_used)} sources about pressure transmitters in the {industry} industry, write a comprehensive report on CUSTOMER NEEDS.
-
-SOURCES:
-{combined_content}
-
-Write a structured report with these sections:
-
-## Executive Summary
-Brief overview of the key customer needs in {industry}
-
-## Critical Customer Needs
-
-List each customer need with:
-- **The Need**: What customers require (include specific numbers/thresholds when mentioned)
-- **Spec Type**: Which product spec addresses this (accuracy, pressure_range, temperature_range, output_signal, certification)
-- **Threshold**: The specific requirement value (e.g., ±0.1%, 0-6000 psi, -40°C to 85°C)
-
-Examples:
-- Accuracy ±0.075% for custody transfer (spec: accuracy, threshold: ±0.075%)
-- Pressure rating up to 15,000 psi for wellhead applications (spec: pressure_range, threshold: 15000 psi)
-- ATEX Zone 1 certification for hazardous areas (spec: certification, threshold: ATEX Zone 1)
-
-## Industry-Specific Requirements
-Any regulatory, safety, or operational requirements specific to {industry}
-
-## Conclusion
-Summary of the most critical needs
-
-Write the report now:"""
+    report_prompt = build_poml_prompt(
+        role="Industry analyst",
+        objective="Write a comprehensive customer-needs report for pressure transmitters",
+        context={
+            "industry": industry,
+            "num_sources": len(sources_used),
+            "sources_excerpt": combined_content,
+        },
+        instructions=[
+            "Write a structured report with sections: Executive Summary, Critical Customer Needs, Industry-Specific Requirements, and Conclusion.",
+            "In Critical Customer Needs, list each need with The Need, Spec Type, and Threshold.",
+            "Include specific numbers and requirement thresholds whenever present.",
+            "Use spec types from this set when applicable: accuracy, pressure_range, temperature_range, output_signal, certification.",
+        ],
+        constraints=[
+            "Focus on customer needs in the provided industry only.",
+            "Keep evidence-grounded details tied to the provided source content.",
+        ],
+        output_format=(
+            "Markdown report with headings: "
+            "## Executive Summary, ## Critical Customer Needs, "
+            "## Industry-Specific Requirements, ## Conclusion"
+        ),
+    )
 
     try:
         response = llm.invoke(report_prompt)
@@ -674,67 +849,48 @@ def map_needs_from_report() -> str:
     
     products_text = "\n".join(product_specs_summary) if product_specs_summary else "No product specs available"
     
-    mapping_prompt = f"""Based on this industry needs report and available products, extract customer needs and map them to products.
-
-INDUSTRY NEEDS REPORT:
-{_tool_state.industry_needs_report}
-
-AVAILABLE PRODUCTS WITH SPECS:
-{products_text}
-
-Extract each customer need from the report and map to products that meet the requirement.
-
-CRITICAL: Need names MUST include the SPECIFIC THRESHOLD VALUE, not generic descriptions!
-
-BAD names (too generic):
-- "High Accuracy for Critical Measurements" ❌
-- "High Pressure Rating for Wellhead" ❌
-- "Temperature Resistance" ❌
-
-GOOD names (include specific threshold):
-- "Accuracy ±0.075% for custody transfer" ✓
-- "Pressure range 0-20000 psi for wellhead" ✓  
-- "Temperature -40°C to 85°C for harsh environments" ✓
-
-Return as JSON:
-{{
-  "needs": [
-    {{
-      "name": "Accuracy ±0.075% for custody transfer",
-      "spec_type": "accuracy",
-      "threshold": "±0.075%"
-    }},
-    {{
-      "name": "Pressure 0-20000 psi for wellhead applications",
-      "spec_type": "pressure_range",
-      "threshold": "0-20000 psi"
-    }},
-    {{
-      "name": "Temperature -40°C to 85°C for harsh environments",
-      "spec_type": "temperature_range",
-      "threshold": "-40°C to 85°C"
-    }}
-  ],
-  "mappings": [
-    {{
-      "need_name": "Accuracy ±0.075% for custody transfer",
-      "product": "Product Name",
-      "spec_type": "accuracy",
-      "product_value": "±0.04%",
-      "meets_requirement": true
-    }}
-  ]
-}}
-
-AVAILABLE PRODUCT NAMES (use EXACTLY these names in mappings):
-{list(_tool_state.products.keys())}
-
-Rules:
-- Need names MUST include the specific number/threshold from the report
-- Only map products that meet the threshold (meets_requirement: true)
-- Use product names EXACTLY as shown above (copy/paste from the list)
-
-Return ONLY the JSON, nothing else."""
+    mapping_prompt = build_poml_prompt(
+        role="Competitive intelligence analyst",
+        objective="Extract customer needs from report and map qualifying products",
+        context={
+            "industry_needs_report": _tool_state.industry_needs_report,
+            "available_products_with_specs": products_text,
+            "available_product_names_exact": list(_tool_state.products.keys()),
+        },
+        instructions=[
+            "Extract each customer need from the report.",
+            "Need names must include the exact threshold values from the report.",
+            "Map only products that meet each need threshold.",
+            "Use product names exactly as provided.",
+        ],
+        constraints=[
+            "Return only valid JSON.",
+            "Do not include any prose outside JSON.",
+            "Do not include mappings where meets_requirement is false.",
+        ],
+        output_format=json.dumps(
+            {
+                "needs": [
+                    {
+                        "name": "Accuracy ±0.075% for custody transfer",
+                        "spec_type": "accuracy",
+                        "threshold": "±0.075%",
+                    }
+                ],
+                "mappings": [
+                    {
+                        "need_name": "Accuracy ±0.075% for custody transfer",
+                        "product": "Product Name",
+                        "spec_type": "accuracy",
+                        "product_value": "±0.04%",
+                        "meets_requirement": True,
+                    }
+                ],
+            },
+            indent=2,
+            ensure_ascii=True,
+        ),
+    )
 
     try:
         response = llm.invoke(mapping_prompt)
@@ -951,16 +1107,26 @@ def research_customer_segments(industry: str) -> str:
     from src.pipeline.chroma_store import chunk_and_store
     
     # Step 1: LLM generates search queries
-    query_prompt = f"""You are researching customer segments for pressure transmitters in the {industry} industry.
-
-Generate 4-5 search queries to find information about:
-- Who buys/uses pressure transmitters in {industry}
-- Different types of companies/operations in {industry} that need pressure measurement
-- Market segments and customer categories
-- End users vs distributors vs OEMs
-
-Return ONLY a JSON array of search query strings. Be specific to {industry}.
-Example: ["oil and gas upstream customer segments", "refinery instrumentation buyers"]"""
+    query_prompt = build_poml_prompt(
+        role="Market segmentation researcher",
+        objective="Generate search queries to identify customer segments for pressure transmitters",
+        context={
+            "industry": industry,
+            "domain": "pressure transmitters",
+        },
+        instructions=[
+            "Generate 4-5 search queries.",
+            "Cover who buys or uses pressure transmitters in the target industry.",
+            "Cover different company and operation types needing pressure measurement.",
+            "Cover market segments and customer categories, including end users, distributors, and OEMs.",
+            "Make every query specific to the provided industry.",
+        ],
+        constraints=[
+            "Return only valid JSON.",
+            "Output must be a JSON array of strings.",
+        ],
+        output_format='["oil and gas upstream customer segments", "refinery instrumentation buyers"]',
+    )
 
     print(f"   🤖 LLM generating search queries...")
     try:
@@ -986,6 +1152,8 @@ Example: ["oil and gas upstream customer segments", "refinery instrumentation bu
     
     # Step 2: Search and collect URLs
     all_urls = []
+    allowed_domains = _tool_state.source_selection.get("allowed_domains", [])
+    allowed_source_types = _tool_state.source_selection.get("allowed_source_types", [])
     for query in search_queries:
         _tool_state.searched_queries.append(query)
         print(f"   🔍 Searching: '{query[:50]}...'")
@@ -993,7 +1161,20 @@ Example: ["oil and gas upstream customer segments", "refinery instrumentation bu
             response = client.search(query=query, max_results=4, search_depth="advanced")
             for r in response.get("results", []):
                 url = r.get("url", "")
-                if url and url not in all_urls and url not in _tool_state.extracted_urls:
+                title = r.get("title", "")
+                snippet = r.get("content", "")[:500]
+                if (
+                    url
+                    and url not in all_urls
+                    and url not in _tool_state.extracted_urls
+                    and _passes_source_selection(
+                        url=url,
+                        title=title,
+                        snippet=snippet,
+                        allowed_domains=allowed_domains,
+                        allowed_source_types=allowed_source_types,
+                    )
+                ):
                     all_urls.append(url)
         except Exception as e:
             print(f"   ⚠️ Search error: {e}")
@@ -1031,39 +1212,42 @@ Example: ["oil and gas upstream customer segments", "refinery instrumentation bu
     print(f"   ✅ Extracted from {len(extracted_content)} sources")
     
     # Step 4: LLM analyzes content to identify customer segments WITH evidence
-    analysis_prompt = f"""Analyze the following sources about the {industry} industry and identify distinct CUSTOMER SEGMENTS (groups of buyers/users of pressure transmitters).
-
-SOURCES:
-"""
-    for i, src in enumerate(extracted_content):
-        analysis_prompt += f"\n--- SOURCE {i+1}: {src['url']} ---\n{src['content'][:2000]}\n"
-    
-    analysis_prompt += f"""
-
-For each customer segment you identify, you MUST:
-1. Name the segment clearly
-2. Provide a description of who they are
-3. Quote the EXACT TEXT from the source that supports this (word for word)
-4. Identify which source URL it came from
-
-Return a JSON array:
-[
-    {{
-        "name": "Upstream Oil & Gas Operators",
-        "description": "Companies involved in exploration and production of oil and gas",
-        "evidence_text": "The exact quote from the source that mentions this segment",
-        "source_url": "https://the-url-where-you-found-this.com"
-    }},
-    ...
-]
-
-IMPORTANT:
-- Only include segments you can PROVE with direct quotes
-- evidence_text must be EXACT words from the source (copy-paste)
-- If you can't find evidence, don't include that segment
-- Focus on {industry} specifically
-
-Return ONLY valid JSON."""
+    source_context = [
+        {"url": src["url"], "content_excerpt": src["content"][:2000]}
+        for src in extracted_content
+    ]
+    analysis_prompt = build_poml_prompt(
+        role="B2B industry analyst",
+        objective="Identify evidence-backed customer segments for pressure transmitters",
+        context={
+            "industry": industry,
+            "sources": source_context,
+        },
+        instructions=[
+            "Identify distinct customer segments (buyer/user groups).",
+            "For each segment, provide a clear segment name and description.",
+            "Include exact evidence text quoted verbatim from the source.",
+            "Include the source URL that contains the evidence.",
+        ],
+        constraints=[
+            "Only include segments with direct quote evidence.",
+            "Do not include segments lacking explicit evidence in the provided sources.",
+            "Focus only on the provided industry context.",
+            "Return only valid JSON.",
+        ],
+        output_format=json.dumps(
+            [
+                {
+                    "name": "Upstream Oil & Gas Operators",
+                    "description": "Companies involved in exploration and production of oil and gas",
+                    "evidence_text": "The exact quote from the source that mentions this segment",
+                    "source_url": "https://the-url-where-you-found-this.com",
+                }
+            ],
+            indent=2,
+            ensure_ascii=True,
+        ),
+    )
 
     print(f"   🤖 LLM analyzing for customer segments...")
     try:
@@ -1210,40 +1394,36 @@ def map_segments_to_products() -> str:
             "specs": specs
         })
     
-    prompt = f"""Analyze which products are suitable for which customer segments.
-
-CUSTOMER SEGMENTS:
-{json.dumps(segments_info, indent=2)}
-
-AVAILABLE PRODUCTS:
-{json.dumps(products_info, indent=2)}
-
-For EACH segment, identify which products would serve them well and explain WHY.
-Consider:
-- Does the product's specifications match the segment's typical needs?
-- Is the company/brand relevant to that market?
-- Would this segment realistically purchase this product?
-- Pressure transmitters are generally applicable to most industrial segments
-
-Return a JSON array of mappings:
-[
-    {{
-        "segment": "Upstream Oil & Gas Operators",
-        "product": "3051S",
-        "reason": "High pressure rating (up to 10,000 psi) suitable for wellhead applications, ATEX certification for hazardous areas"
-    }},
-    ...
-]
-
-Rules:
-- Try to map EACH segment to at least one product if applicable
-- A product can map to multiple segments (this is normal)
-- A segment can have multiple products
-- Use EXACT segment names from the list above
-- Use EXACT product names from the list above
-- Keep reasons concise but specific (mention actual specs when possible)
-
-Return ONLY valid JSON."""
+    prompt = build_poml_prompt(
+        role="Go-to-market analyst",
+        objective="Map customer segments to suitable products",
+        context={
+            "customer_segments": segments_info,
+            "available_products": products_info,
+        },
+        instructions=[
+            "For each segment, identify one or more suitable products and explain why.",
+            "Evaluate specification fit, market relevance, and realistic purchasing behavior.",
+            "Mention concrete specs in reasons when possible.",
+        ],
+        constraints=[
+            "Try to map each segment to at least one product if applicable.",
+            "Use exact segment names from input.",
+            "Use exact product names from input.",
+            "Return only valid JSON.",
+        ],
+        output_format=json.dumps(
+            [
+                {
+                    "segment": "Upstream Oil & Gas Operators",
+                    "product": "3051S",
+                    "reason": "High pressure rating suitable for wellhead applications and hazardous-area certifications.",
+                }
+            ],
+            indent=2,
+            ensure_ascii=True,
+        ),
+    )
 
     try:
         response = llm.invoke(prompt)
@@ -1394,88 +1574,74 @@ def generate_house_of_quality() -> str:
     hows = list(all_spec_types)
     
     # Build prompt for LLM to analyze relationships
-    prompt = f"""You are a competitive intelligence analyst performing Quality Function Deployment (QFD).
-
-TASK: Create a House of Quality matrix mapping customer needs to product specifications.
-
-CUSTOMER NEEDS (WHATs) - These are what customers want:
-{json.dumps(whats, indent=2)}
-
-PRODUCT SPECIFICATIONS (HOWs) - These are technical specs we can measure:
-{json.dumps(hows, indent=2)}
-
-PRODUCTS AND THEIR SPECS:
-{json.dumps(product_specs, indent=2)}
-
-RELATIONSHIP WEIGHTS:
-- 9 = Strong relationship (spec directly fulfills the need)
-- 3 = Medium relationship (spec partially addresses the need)
-- 1 = Weak relationship (spec has minor impact on the need)
-- 0 = No relationship
-
-COMPETITIVE SCORES (1-5):
-- 5 = Excellent - product spec exceeds required threshold
-- 4 = Good - product spec meets required threshold
-- 3 = Average - product spec is close to threshold
-- 2 = Below Average - product spec falls short of threshold
-- 1 = Poor - product spec significantly below threshold
-
-INSTRUCTIONS:
-1. For each customer need, determine which specifications influence it
-2. Assign relationship weights (0, 1, 3, or 9)
-3. For each product, assess how well it meets EACH customer need (score 1-5)
-4. CRITICAL: For EVERY score, show the derivation comparing actual spec to required threshold
-
-SCORE DERIVATION FORMAT (you MUST follow this):
-"Score = X because [spec_name] = [actual_value] [comparison] required [threshold_value]"
-
-Examples:
-- "Score = 5 because accuracy = ±0.04% < required ±0.075% (exceeds)"
-- "Score = 2 because pressure_range = 10,000 psi < required 15,000 psi (falls short)"
-- "Score = 4 because temperature_range = -40 to 85°C meets required -40 to 80°C"
-- "Score = 1 because output_signal = 4-20mA missing required HART protocol"
-
-Return ONLY valid JSON in this exact format:
-{{
-    "matrix": [
-        {{
-            "need_id": "need key from WHATs",
-            "need_name": "readable name",
-            "relationships": {{
-                "spec_type": weight,
-                "spec_type2": weight
-            }},
-            "reasoning": "Why these specs relate to this need"
-        }}
-    ],
-    "competitive_scores": [
-        {{
-            "product": "product name",
-            "scores": [
-                {{
-                    "need_id": "the customer need id",
-                    "score": 1-5,
-                    "reason": "Score = X because [spec] = [actual] vs required [threshold]"
-                }}
-            ],
-            "overall_assessment": "Brief overall assessment of this product"
-        }}
-    ],
-    "technical_correlations": [
-        {{
-            "spec1": "specification type",
-            "spec2": "specification type",
-            "correlation": "positive" | "negative" | "none",
-            "explanation": "Why these specs correlate"
-        }}
-    ],
-    "key_insights": [
-        "Important insight 1",
-        "Important insight 2"
-    ]
-}}
-
-CRITICAL: Every score reason MUST show the derivation: actual spec value compared to the required threshold from the customer need."""
+    prompt = build_poml_prompt(
+        role="Competitive intelligence analyst performing Quality Function Deployment",
+        objective="Create a House of Quality matrix mapping customer needs (WHATs) to specifications (HOWs)",
+        context={
+            "customer_needs_whats": whats,
+            "specification_hows": hows,
+            "products_and_specs": product_specs,
+            "relationship_weights": {
+                "9": "Strong relationship",
+                "3": "Medium relationship",
+                "1": "Weak relationship",
+                "0": "No relationship",
+            },
+            "competitive_scores_scale": {
+                "5": "Excellent - exceeds required threshold",
+                "4": "Good - meets required threshold",
+                "3": "Average - close to threshold",
+                "2": "Below Average - falls short",
+                "1": "Poor - significantly below threshold",
+            },
+        },
+        instructions=[
+            "For each customer need, determine influencing specifications and assign weights 0, 1, 3, or 9.",
+            "For each product and each need, assign a score from 1-5.",
+            "For every score, include an explicit derivation comparing actual spec value to required threshold.",
+            "Provide technical correlations between specifications and key strategic insights.",
+        ],
+        constraints=[
+            "Return only valid JSON.",
+            "Every score reason must use the format: Score = X because [spec_name] = [actual_value] [comparison] required [threshold_value].",
+        ],
+        output_format=json.dumps(
+            {
+                "matrix": [
+                    {
+                        "need_id": "need key from WHATs",
+                        "need_name": "readable name",
+                        "relationships": {"spec_type": 9},
+                        "reasoning": "Why these specs relate to this need",
+                    }
+                ],
+                "competitive_scores": [
+                    {
+                        "product": "product name",
+                        "scores": [
+                            {
+                                "need_id": "the customer need id",
+                                "score": 4,
+                                "reason": "Score = 4 because [spec] = [actual] meets required [threshold]",
+                            }
+                        ],
+                        "overall_assessment": "Brief overall assessment of this product",
+                    }
+                ],
+                "technical_correlations": [
+                    {
+                        "spec1": "specification type",
+                        "spec2": "specification type",
+                        "correlation": "positive",
+                        "explanation": "Why these specs correlate",
+                    }
+                ],
+                "key_insights": ["Important insight 1", "Important insight 2"],
+            },
+            indent=2,
+            ensure_ascii=True,
+        ),
+    )
     
     try:
         response = llm.invoke(prompt)
@@ -1535,6 +1701,7 @@ Key Insights:
 # =============================================================================
 
 TOOLS = [
+    set_source_selection,
     search_web,
     extract_page_content,
     save_competitor,
@@ -1553,72 +1720,63 @@ TOOLS = [
 # SYSTEM PROMPT
 # =============================================================================
 
-SYSTEM_PROMPT = """You are a competitive intelligence researcher for Honeywell's pressure transmitter products (SmartLine ST700).
-
-YOUR GOAL: 
-1. Research Honeywell's competitors and find products with specs
-2. Identify customer segments in the target industry and map products to them
-3. Generate an in-depth industry needs report (from multiple sources)
-4. Map customer needs to product specifications
-5. Build a House of Quality (QFD) matrix
-
-TOOLS AVAILABLE:
-
-Competitor/Product Research:
-- search_web: Search for information (returns URLs)
-- extract_page_content: MUST CALL THIS to get content AND store evidence in ChromaDB
-- save_competitor: Save a competitor (ONLY after extracting a page about them)
-- save_product: Save a product with specs (ONLY after extracting the datasheet)
-
-Market Research:
-- research_customer_segments: Find customer groups/segments in the industry (with evidence)
-- map_segments_to_products: Map which products serve which customer segments
-
-Customer Needs Research (REPORT-BASED):
-- research_industry_needs: Comprehensive research - searches 8+ sources and generates an in-depth report
-- map_needs_from_report: Extracts needs from the report and maps them to your saved products
-
-Quality Function Deployment:
-- generate_house_of_quality: Creates a QFD matrix mapping customer needs (WHATs) to product specs (HOWs)
-
-Utility:
-- get_current_progress: Check what you've collected
-- finish_research: Signal you're done
-
-WORKFLOW:
-
-PHASE 1 - COMPETITORS & PRODUCTS:
-1. Search for 3-5 competitor companies 
-2. For EACH competitor:
-   a. search_web for info → extract_page_content(url) → save_competitor
-   b. search_web for their products → extract_page_content(datasheet) → save_product with specs
-3. Get at least 1 product per competitor before moving on
-
-PHASE 2 - CUSTOMER SEGMENTS:
-After you have some products:
-1. Call research_customer_segments(industry) - this finds who buys/uses pressure transmitters
-2. Call map_segments_to_products() - this maps products to each segment
-
-PHASE 3 - CUSTOMER NEEDS REPORT:
-1. Call research_industry_needs(industry) - searches 8+ sources and generates a comprehensive report
-2. Call map_needs_from_report() - extracts specific needs and maps them to your products
-
-PHASE 4 - HOUSE OF QUALITY:
-After needs are mapped:
-1. Call generate_house_of_quality() - creates a QFD matrix showing:
-   - How each spec addresses each customer need (relationship weights 0, 1, 3, 9)
-   - Competitive scores for each product
-   - Technical correlations between specifications
-   - Key strategic insights
-
-FINISH when you have:
-- At least 3 competitors with products
-- Customer segments identified AND mapped to products
-- A generated industry needs report
-- Need-to-product mappings
-- House of Quality matrix
-
-START with Phase 1, then Phase 2, then Phase 3, then Phase 4!"""
+SYSTEM_PROMPT = build_poml_prompt(
+    role="Competitive intelligence researcher for Honeywell pressure transmitters (SmartLine ST700)",
+    objective=(
+        "Research competitors and products, map customer segments and needs, "
+        "and produce a House of Quality matrix."
+    ),
+    context={
+        "goals": [
+            "Research Honeywell competitors and find products with specs.",
+            "Identify customer segments in the target industry and map products to them.",
+            "Generate an in-depth industry needs report from multiple sources.",
+            "Map customer needs to product specifications.",
+            "Build a House of Quality (QFD) matrix.",
+        ],
+        "tools_available": {
+            "competitor_product_research": [
+                "search_web: Search for information (returns URLs)",
+                "extract_page_content: Must be called to get content and store evidence in ChromaDB",
+                "save_competitor: Save competitor only after extracting a relevant page",
+                "save_product: Save product with specs only after extracting datasheet content",
+            ],
+            "market_research": [
+                "research_customer_segments: Find customer groups/segments with evidence",
+                "map_segments_to_products: Map products to customer segments",
+            ],
+            "customer_needs_research": [
+                "research_industry_needs: Search 8+ sources and generate in-depth needs report",
+                "map_needs_from_report: Extract needs from report and map to saved products",
+            ],
+            "quality_function_deployment": [
+                "generate_house_of_quality: Create QFD matrix from needs (WHATs) and specs (HOWs)",
+            ],
+            "utility": [
+                "set_source_selection: Restrict to specific domains and/or source types",
+                "get_current_progress: Check collection progress",
+                "finish_research: Signal completion",
+            ],
+        },
+        "workflow_phases": [
+            "Phase 1 - Competitors & Products: Find 3-5 competitors, then for each competitor use search_web -> extract_page_content -> save_competitor and search_web -> extract_page_content -> save_product. Get at least one product per competitor.",
+            "Phase 2 - Customer Segments: After products exist, call research_customer_segments(industry), then map_segments_to_products().",
+            "Phase 3 - Customer Needs Report: Call research_industry_needs(industry), then map_needs_from_report().",
+            "Phase 4 - House of Quality: After needs are mapped, call generate_house_of_quality().",
+        ],
+    },
+    instructions=[
+        "Follow the workflow phases in order from Phase 1 to Phase 4.",
+        "Use tools proactively and ground extracted facts in stored evidence.",
+        "Prioritize complete, verifiable outputs over broad but unverified claims.",
+    ],
+    constraints=[
+        "Do not skip required extraction before save_competitor or save_product.",
+        "Finish only when all required outputs are present.",
+        "Required outputs: at least 3 competitors with products, customer segments mapped to products, industry needs report, need-to-product mappings, and House of Quality matrix.",
+    ],
+    output_format="Operational execution via tool calls; begin with Phase 1 and progress sequentially.",
+)
 
 
 # =============================================================================
@@ -1724,7 +1882,13 @@ def build_graph() -> StateGraph:
 # RUN THE AGENT
 # =============================================================================
 
-def run_agent(max_competitors: int = 10, industry: str = "process industries", max_iterations: int = 25) -> Dict[str, Any]:
+def run_agent(
+    max_competitors: int = 10,
+    industry: str = "process industries",
+    max_iterations: int = 25,
+    allowed_domains: List[str] | None = None,
+    allowed_source_types: List[str] | None = None,
+) -> Dict[str, Any]:
     """
     Run the LangGraph agentic pipeline.
     
@@ -1741,6 +1905,12 @@ def run_agent(max_competitors: int = 10, industry: str = "process industries", m
     _tool_state = ToolState()
     MAX_COMPETITORS = min(max_competitors, 10)
     MAX_ITERATIONS = max_iterations
+    set_source_selection.invoke(
+        {
+            "allowed_domains": allowed_domains or [],
+            "allowed_source_types": allowed_source_types or [],
+        }
+    )
     
     print("="*60)
     print("🤖 LANGGRAPH AGENTIC COMPETITIVE INTELLIGENCE")
@@ -1749,6 +1919,7 @@ def run_agent(max_competitors: int = 10, industry: str = "process industries", m
     print(f"    Max competitors: {MAX_COMPETITORS}")
     print(f"    Max iterations: {MAX_ITERATIONS}")
     print(f"    Industry: {industry}")
+    print(f"    Source selection: {_source_selection_summary()}")
     print("    📦 Evidence stored in ChromaDB for verification")
     print("="*60)
     
@@ -1767,6 +1938,7 @@ Tasks:
 1. Find up to {MAX_COMPETITORS} competitors with their products and specs
 2. Research customer needs specific to {industry}
 3. Map customer needs to product specifications
+4. Respect source selection rules: {_source_selection_summary()}
 
 Start now.""")
         ],

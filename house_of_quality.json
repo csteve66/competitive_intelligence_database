@@ -1,466 +1,344 @@
 {
   "whats": [
     {
-      "id": "Accuracy \u00b10.075% for custody transfer",
-      "name": "Accuracy \u00b10.075% for custody transfer",
-      "threshold": "\u00b10.075%",
+      "id": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
+      "name": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
+      "threshold": "\u00b10.1% to \u00b10.25%",
       "spec_type": "accuracy",
       "description": ""
     },
     {
-      "id": "Pressure range up to 15000 psi for wellhead applications",
-      "name": "Pressure range up to 15000 psi for wellhead applications",
-      "threshold": "up to 15000 psi",
+      "id": "Wide Pressure Range Capability up to 10,000 psi or higher",
+      "name": "Wide Pressure Range Capability up to 10,000 psi or higher",
+      "threshold": "up to 10,000 psi or higher",
       "spec_type": "pressure_range",
       "description": ""
     },
     {
-      "id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-      "name": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-      "threshold": "-40\u00b0C to 85\u00b0C",
+      "id": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+      "name": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+      "threshold": "Hastelloy or Tantalum diaphragm",
+      "spec_type": "certification_/_material",
+      "description": ""
+    },
+    {
+      "id": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
+      "name": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
+      "threshold": "below -40\u00b0C to 125\u00b0C or more",
       "spec_type": "temperature_range",
       "description": ""
     },
     {
-      "id": "Temperature up to +125\u00b0C for high temperature applications",
-      "name": "Temperature up to +125\u00b0C for high temperature applications",
-      "threshold": "up to +125\u00b0C",
-      "spec_type": "temperature_range",
-      "description": ""
-    },
-    {
-      "id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-      "name": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-      "threshold": "NACE MR0175/ISO 15156 compliance",
-      "spec_type": "material_compatibility",
-      "description": ""
-    },
-    {
-      "id": "Mechanical durability compliant with industry shock and vibration standards",
-      "name": "Mechanical durability compliant with industry shock and vibration standards",
-      "threshold": "industry shock and vibration standards",
-      "spec_type": "mechanical_durability",
-      "description": ""
-    },
-    {
-      "id": "Output signal 4-20 mA with HART protocol minimum",
-      "name": "Output signal 4-20 mA with HART protocol minimum",
-      "threshold": "4-20 mA with HART",
-      "spec_type": "output_signal",
-      "description": ""
-    },
-    {
-      "id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-      "name": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-      "threshold": "ATEX Zone 1 or Zone 0, IECEx, CSA, FM",
+      "id": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+      "name": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+      "threshold": "ISA-RP12.6 vibration and shock resistance",
       "spec_type": "certification",
       "description": ""
     },
     {
-      "id": "Ease of maintenance with field calibration and remote diagnostics",
-      "name": "Ease of maintenance with field calibration and remote diagnostics",
-      "threshold": "field calibration and remote diagnostics",
-      "spec_type": "maintainability",
+      "id": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
+      "name": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
+      "threshold": "4-20 mA analog output with HART or digital communication",
+      "spec_type": "output_signal",
       "description": ""
     },
     {
-      "id": "Long-term stability with zero and span drift less than 0.1% per year",
-      "name": "Long-term stability with zero and span drift less than 0.1% per year",
-      "threshold": "drift < 0.1% per year",
-      "spec_type": "stability",
+      "id": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+      "name": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+      "threshold": "IP66/IP67 or higher",
+      "spec_type": "certification",
+      "description": ""
+    },
+    {
+      "id": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+      "name": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+      "threshold": "modular design, accessible wiring, clear diagnostics",
+      "spec_type": "-",
+      "description": ""
+    },
+    {
+      "id": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+      "name": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+      "threshold": "API, IECEx, ATEX certifications",
+      "spec_type": "certification",
       "description": ""
     }
   ],
   "hows": [
+    "accuracy",
+    "temperature_range",
+    "pressure_range",
     "process_connection",
     "output_signal",
-    "pressure_range",
-    "temperature_range",
-    "accuracy",
     "supply_voltage"
   ],
   "matrix": [
     {
-      "need_id": "Accuracy \u00b10.075% for custody transfer",
-      "need_name": "Accuracy \u00b10.075% for custody transfer",
+      "need_id": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
+      "need_name": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
       "relationships": {
         "accuracy": 9
       },
-      "reasoning": "Accuracy specification directly determines if the product meets the \u00b10.075% accuracy requirement for custody transfer."
+      "reasoning": "Measurement accuracy directly defines the precision of the device output, making the 'accuracy' specification critical to fulfilling this need."
     },
     {
-      "need_id": "Pressure range up to 15000 psi for wellhead applications",
-      "need_name": "Pressure range up to 15000 psi for wellhead applications",
+      "need_id": "Wide Pressure Range Capability up to 10,000 psi or higher",
+      "need_name": "Wide Pressure Range Capability up to 10,000 psi or higher",
       "relationships": {
         "pressure_range": 9
       },
-      "reasoning": "Pressure range specification directly impacts the ability to operate up to 15000 psi as required."
+      "reasoning": "The pressure range specification determines the maximum and minimum pressures the device can measure, directly impacting this customer need."
     },
     {
-      "need_id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-      "need_name": "Temperature -40\u00b0C to 85\u00b0C standard operation",
+      "need_id": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+      "need_name": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+      "relationships": {},
+      "reasoning": "No direct specification in the provided HOWs explicitly covers diaphragm material or corrosion resistance; thus, no direct relationship is assigned."
+    },
+    {
+      "need_id": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
+      "need_name": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
       "relationships": {
         "temperature_range": 9
       },
-      "reasoning": "Temperature range specification directly affects meeting the standard operation temperature range."
+      "reasoning": "Operating temperature range specification directly impacts the device's ability to function in extreme temperatures."
     },
     {
-      "need_id": "Temperature up to +125\u00b0C for high temperature applications",
-      "need_name": "Temperature up to +125\u00b0C for high temperature applications",
-      "relationships": {
-        "temperature_range": 9
-      },
-      "reasoning": "Temperature range specification directly determines if the product can handle high temperature applications up to +125\u00b0C."
+      "need_id": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+      "need_name": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+      "relationships": {},
+      "reasoning": "No explicit specification in the provided HOWs addresses mechanical robustness or vibration/shock resistance."
     },
     {
-      "need_id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-      "need_name": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-      "relationships": {
-        "process_connection": 3,
-        "material_compatibility": 9
-      },
-      "reasoning": "Material compatibility is critical for corrosion resistance compliance; process connection materials partially influence corrosion resistance."
-    },
-    {
-      "need_id": "Mechanical durability compliant with industry shock and vibration standards",
-      "need_name": "Mechanical durability compliant with industry shock and vibration standards",
-      "relationships": {
-        "process_connection": 3,
-        "mechanical_durability": 9
-      },
-      "reasoning": "Mechanical durability is the main spec for shock and vibration compliance; process connection design can partially affect durability."
-    },
-    {
-      "need_id": "Output signal 4-20 mA with HART protocol minimum",
-      "need_name": "Output signal 4-20 mA with HART protocol minimum",
+      "need_id": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
+      "need_name": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
       "relationships": {
         "output_signal": 9
       },
-      "reasoning": "Output signal specification directly determines if the product supports 4-20 mA with HART protocol."
+      "reasoning": "Output signal type and communication protocols directly fulfill this need."
     },
     {
-      "need_id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-      "need_name": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-      "relationships": {
-        "certification": 9
-      },
-      "reasoning": "Certification spec directly relates to meeting required safety and compliance approvals."
+      "need_id": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+      "need_name": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+      "relationships": {},
+      "reasoning": "Ingress protection is not explicitly covered by the provided HOWs."
     },
     {
-      "need_id": "Ease of maintenance with field calibration and remote diagnostics",
-      "need_name": "Ease of maintenance with field calibration and remote diagnostics",
-      "relationships": {
-        "maintainability": 9,
-        "output_signal": 3
-      },
-      "reasoning": "Maintainability spec is primary for ease of maintenance; output signal protocols can partially support remote diagnostics."
+      "need_id": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+      "need_name": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+      "relationships": {},
+      "reasoning": "No specification in the provided HOWs directly addresses maintenance or modular design."
     },
     {
-      "need_id": "Long-term stability with zero and span drift less than 0.1% per year",
-      "need_name": "Long-term stability with zero and span drift less than 0.1% per year",
-      "relationships": {
-        "stability": 9,
-        "accuracy": 3
-      },
-      "reasoning": "Stability spec is critical for drift requirements; accuracy impacts overall measurement reliability."
+      "need_id": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+      "need_name": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+      "relationships": {},
+      "reasoning": "Certifications are not explicitly included in the provided HOWs."
     }
   ],
   "competitive_scores": [
     {
-      "product": "Rosemount 3051S",
+      "product": "Rosemount 3051",
       "scores": [
         {
-          "need_id": "Accuracy \u00b10.075% for custody transfer",
+          "need_id": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
           "score": 5,
-          "reason": "Score = 5 because accuracy = \u00b10.025% < required \u00b10.075% (exceeds)"
+          "reason": "Score = 5 because accuracy = \u00b10.04% exceeds required \u00b10.1% to \u00b10.25%."
         },
         {
-          "need_id": "Pressure range up to 15000 psi for wellhead applications",
-          "score": 2,
-          "reason": "Score = 2 because pressure_range = up to 4000 psi < required 15000 psi (falls short)"
-        },
-        {
-          "need_id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-          "score": 5,
-          "reason": "Score = 5 because temperature_range = -200 to 850 \u00b0C > required -40 to 85 \u00b0C (exceeds)"
-        },
-        {
-          "need_id": "Temperature up to +125\u00b0C for high temperature applications",
-          "score": 5,
-          "reason": "Score = 5 because temperature_range = up to 850 \u00b0C > required up to 125 \u00b0C (exceeds)"
-        },
-        {
-          "need_id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
+          "need_id": "Wide Pressure Range Capability up to 10,000 psi or higher",
           "score": 3,
-          "reason": "Score = 3 because process_connection = 1/2 NPT/manifold (standard materials) partially supports corrosion resistance; no explicit NACE compliance stated"
+          "reason": "Score = 3 because pressure_range = 0-6000 psi is below required up to 10,000 psi or higher but close."
         },
         {
-          "need_id": "Mechanical durability compliant with industry shock and vibration standards",
+          "need_id": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for corrosion-resistant diaphragm materials."
+        },
+        {
+          "need_id": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
           "score": 3,
-          "reason": "Score = 3 because process_connection = manifold/seal system options partially support mechanical durability; no explicit shock/vibration compliance stated"
+          "reason": "Score = 3 because temperature_range = -40 to 85\u00b0C is below required below -40\u00b0C to 125\u00b0C or more but close on lower end."
         },
         {
-          "need_id": "Output signal 4-20 mA with HART protocol minimum",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA HART included (meets and exceeds)"
+          "need_id": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for vibration and shock resistance."
         },
         {
-          "need_id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-          "score": 2,
-          "reason": "Score = 2 because certification not specified (assumed below required certifications)"
+          "need_id": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
+          "score": 4,
+          "reason": "Score = 4 because output_signal = 4-20mA HART meets required 4-20 mA analog with HART or digital communication."
         },
         {
-          "need_id": "Ease of maintenance with field calibration and remote diagnostics",
-          "score": 3,
-          "reason": "Score = 3 because output_signal supports HART and WirelessHART enabling remote diagnostics; no explicit maintainability info"
+          "need_id": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for ingress protection."
         },
         {
-          "need_id": "Long-term stability with zero and span drift less than 0.1% per year",
-          "score": 3,
-          "reason": "Score = 3 because accuracy = \u00b10.025% is excellent but no explicit drift data; assumed average stability"
+          "need_id": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for modular design or maintenance."
+        },
+        {
+          "need_id": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for certifications."
         }
       ],
-      "overall_assessment": "Excellent accuracy and temperature range, limited pressure range, good output signal, but lacks explicit certifications and corrosion resistance details."
+      "overall_assessment": "Rosemount 3051 excels in accuracy and output signal but has limited pressure range and temperature range, with no data on corrosion resistance or certifications."
     },
     {
-      "product": "2600T Series Model 265J",
+      "product": "EJA510E",
       "scores": [
         {
-          "need_id": "Accuracy \u00b10.075% for custody transfer",
-          "score": 4,
-          "reason": "Score = 4 because accuracy = \u00b10.075% meets required \u00b10.075% (meets)"
-        },
-        {
-          "need_id": "Pressure range up to 15000 psi for wellhead applications",
+          "need_id": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
           "score": 1,
-          "reason": "Score = 1 because pressure_range = approx. 1450 psi < required 15000 psi (significantly below)"
+          "reason": "Score = 1 because accuracy not provided, assumed below required \u00b10.1% to \u00b10.25%."
         },
         {
-          "need_id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-          "score": 4,
-          "reason": "Score = 4 because temperature_range = -40 to 85 \u00b0C meets required -40 to 85 \u00b0C (meets)"
-        },
-        {
-          "need_id": "Temperature up to +125\u00b0C for high temperature applications",
-          "score": 1,
-          "reason": "Score = 1 because temperature_range = 85 \u00b0C < required up to 125 \u00b0C (falls short)"
-        },
-        {
-          "need_id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-          "score": 1,
-          "reason": "Score = 1 because no corrosion resistance or material compatibility info provided (assumed poor)"
-        },
-        {
-          "need_id": "Mechanical durability compliant with industry shock and vibration standards",
-          "score": 1,
-          "reason": "Score = 1 because no mechanical durability info provided (assumed poor)"
-        },
-        {
-          "need_id": "Output signal 4-20 mA with HART protocol minimum",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA, HART included (meets)"
-        },
-        {
-          "need_id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided (assumed poor)"
-        },
-        {
-          "need_id": "Ease of maintenance with field calibration and remote diagnostics",
-          "score": 2,
-          "reason": "Score = 2 because output_signal supports HART but no explicit maintainability info (below average)"
-        },
-        {
-          "need_id": "Long-term stability with zero and span drift less than 0.1% per year",
+          "need_id": "Wide Pressure Range Capability up to 10,000 psi or higher",
           "score": 3,
-          "reason": "Score = 3 because accuracy = \u00b10.075% meets threshold but no drift data (assumed average)"
+          "reason": "Score = 3 because pressure_range = -14.5 to 7200 psi is below required up to 10,000 psi or higher but close."
+        },
+        {
+          "need_id": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for corrosion-resistant diaphragm materials."
+        },
+        {
+          "need_id": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
+          "score": 2,
+          "reason": "Score = 2 because temperature_range = -50 to 60\u00b0C falls short of required below -40\u00b0C to 125\u00b0C or more on upper end."
+        },
+        {
+          "need_id": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for vibration and shock resistance."
+        },
+        {
+          "need_id": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
+          "score": 5,
+          "reason": "Score = 5 because output_signal = 4-20mA HART, BRAIN, FOUNDATION Fieldbus, PROFIBUS PA exceeds required 4-20 mA analog with HART or digital communication."
+        },
+        {
+          "need_id": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for ingress protection."
+        },
+        {
+          "need_id": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for modular design or maintenance."
+        },
+        {
+          "need_id": "Compliance with Industry Standards API, IECEx, ATEX certifications",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for certifications."
         }
       ],
-      "overall_assessment": "Meets accuracy and standard temperature needs but poor pressure range and lacks certifications and durability info."
+      "overall_assessment": "EJA510E offers excellent output signal options and moderate pressure range but lacks accuracy data and has limited temperature range, with no corrosion or certification info."
     },
     {
-      "product": "EJA510E/EJA530E",
+      "product": "SmartLine ST700",
       "scores": [
         {
-          "need_id": "Accuracy \u00b10.075% for custody transfer",
+          "need_id": "High Measurement Accuracy \u00b10.1% to \u00b10.25% of full scale",
           "score": 5,
-          "reason": "Score = 5 because accuracy = \u00b10.055% < required \u00b10.075% (exceeds)"
+          "reason": "Score = 5 because accuracy = \u00b10.065% exceeds required \u00b10.1% to \u00b10.25%."
         },
         {
-          "need_id": "Pressure range up to 15000 psi for wellhead applications",
+          "need_id": "Wide Pressure Range Capability up to 10,000 psi or higher",
+          "score": 5,
+          "reason": "Score = 5 because pressure_range = 0-10000 psi meets required up to 10,000 psi or higher."
+        },
+        {
+          "need_id": "Corrosion Resistance with corrosion-resistant diaphragm materials such as Hastelloy or Tantalum",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for corrosion-resistant diaphragm materials."
+        },
+        {
+          "need_id": "Wide Operating Temperature Range from below -40\u00b0C to 125\u00b0C or more",
           "score": 3,
-          "reason": "Score = 3 because pressure_range = up to 7200 psi < required 15000 psi (close but below)"
+          "reason": "Score = 3 because temperature_range = -40 to 85\u00b0C is below required below -40\u00b0C to 125\u00b0C or more on upper end."
         },
         {
-          "need_id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-          "score": 5,
-          "reason": "Score = 5 because temperature_range = -40 to 120 \u00b0C > required -40 to 85 \u00b0C (exceeds)"
+          "need_id": "Robust Mechanical Design with vibration and shock resistance per ISA-RP12.6",
+          "score": 1,
+          "reason": "Score = 1 because no specification provided for vibration and shock resistance."
         },
         {
-          "need_id": "Temperature up to +125\u00b0C for high temperature applications",
+          "need_id": "Reliable and Stable Output Signal 4-20 mA analog with HART or digital communication",
           "score": 4,
-          "reason": "Score = 4 because temperature_range = 120 \u00b0C slightly below required 125 \u00b0C (close)"
+          "reason": "Score = 4 because output_signal = 4-20mA HART meets required 4-20 mA analog with HART or digital communication."
         },
         {
-          "need_id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
+          "need_id": "Ingress Protection and Moisture Resistance IP66/IP67 or higher",
           "score": 1,
-          "reason": "Score = 1 because no corrosion resistance info provided (assumed poor)"
+          "reason": "Score = 1 because no specification provided for ingress protection."
         },
         {
-          "need_id": "Mechanical durability compliant with industry shock and vibration standards",
+          "need_id": "Ease of Maintenance and Troubleshooting with modular design and accessible wiring",
           "score": 1,
-          "reason": "Score = 1 because no mechanical durability info provided (assumed poor)"
+          "reason": "Score = 1 because no specification provided for modular design or maintenance."
         },
         {
-          "need_id": "Output signal 4-20 mA with HART protocol minimum",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA HART included (meets)"
-        },
-        {
-          "need_id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
+          "need_id": "Compliance with Industry Standards API, IECEx, ATEX certifications",
           "score": 1,
-          "reason": "Score = 1 because no certification info provided (assumed poor)"
-        },
-        {
-          "need_id": "Ease of maintenance with field calibration and remote diagnostics",
-          "score": 2,
-          "reason": "Score = 2 because output_signal supports HART but no explicit maintainability info (below average)"
-        },
-        {
-          "need_id": "Long-term stability with zero and span drift less than 0.1% per year",
-          "score": 3,
-          "reason": "Score = 3 because accuracy = \u00b10.055% is good but no drift data (assumed average)"
+          "reason": "Score = 1 because no specification provided for certifications."
         }
       ],
-      "overall_assessment": "Strong accuracy and temperature specs, moderate pressure range, but lacks corrosion resistance, certifications, and durability info."
-    },
-    {
-      "product": "SITRANS P320/P420",
-      "scores": [
-        {
-          "need_id": "Accuracy \u00b10.075% for custody transfer",
-          "score": 4,
-          "reason": "Score = 4 because accuracy = typically \u00b10.04% to \u00b10.1%, borderline meets \u00b10.075% (close)"
-        },
-        {
-          "need_id": "Pressure range up to 15000 psi for wellhead applications",
-          "score": 4,
-          "reason": "Score = 4 because pressure_range = up to 10153 psi < required 15000 psi (below but close)"
-        },
-        {
-          "need_id": "Temperature -40\u00b0C to 85\u00b0C standard operation",
-          "score": 4,
-          "reason": "Score = 4 because temperature_range = -40 to 85 \u00b0C meets required -40 to 85 \u00b0C (meets)"
-        },
-        {
-          "need_id": "Temperature up to +125\u00b0C for high temperature applications",
-          "score": 1,
-          "reason": "Score = 1 because temperature_range = 85 \u00b0C < required up to 125 \u00b0C (falls short)"
-        },
-        {
-          "need_id": "Corrosion resistance compliant with NACE MR0175/ISO 15156",
-          "score": 3,
-          "reason": "Score = 3 because process_connection = EN 1092-1, ASME B16.5, JIS flanges (likely better corrosion resistance) but no explicit NACE compliance"
-        },
-        {
-          "need_id": "Mechanical durability compliant with industry shock and vibration standards",
-          "score": 3,
-          "reason": "Score = 3 because process_connection = flanges likely improve mechanical durability; no explicit shock/vibration compliance"
-        },
-        {
-          "need_id": "Output signal 4-20 mA with HART protocol minimum",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA HART included (meets)"
-        },
-        {
-          "need_id": "Certification ATEX Zone 1 or Zone 0, IECEx, CSA, FM approvals",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided (assumed poor)"
-        },
-        {
-          "need_id": "Ease of maintenance with field calibration and remote diagnostics",
-          "score": 2,
-          "reason": "Score = 2 because output_signal supports HART but no explicit maintainability info (below average)"
-        },
-        {
-          "need_id": "Long-term stability with zero and span drift less than 0.1% per year",
-          "score": 3,
-          "reason": "Score = 3 because accuracy range includes \u00b10.04% (good) but no drift data (assumed average)"
-        }
-      ],
-      "overall_assessment": "Good output and temperature specs, moderate pressure range, decent mechanical and corrosion potential, but lacks certifications and high temperature support."
+      "overall_assessment": "SmartLine ST700 excels in pressure range and accuracy, with good output signal, but limited temperature range and no data on corrosion resistance or certifications."
     }
   ],
   "technical_correlations": [
     {
       "spec1": "accuracy",
-      "spec2": "stability",
+      "spec2": "pressure_range",
       "correlation": "positive",
-      "explanation": "Higher accuracy often correlates with better long-term stability and lower drift."
-    },
-    {
-      "spec1": "pressure_range",
-      "spec2": "mechanical_durability",
-      "correlation": "positive",
-      "explanation": "Products designed for higher pressure ranges typically require enhanced mechanical durability."
+      "explanation": "Higher pressure ranges often challenge maintaining high accuracy; thus, improvements in pressure range capability can impact achievable accuracy."
     },
     {
       "spec1": "temperature_range",
-      "spec2": "material_compatibility",
-      "correlation": "positive",
-      "explanation": "Higher temperature ranges require materials compatible with thermal stress and corrosion resistance."
+      "spec2": "accuracy",
+      "correlation": "negative",
+      "explanation": "Extending operating temperature range can negatively affect accuracy due to sensor material and electronics performance variations."
     },
     {
       "spec1": "output_signal",
-      "spec2": "maintainability",
+      "spec2": "supply_voltage",
       "correlation": "positive",
-      "explanation": "Advanced output signals (e.g., HART) enable remote diagnostics and easier maintenance."
-    },
-    {
-      "spec1": "certification",
-      "spec2": "mechanical_durability",
-      "correlation": "positive",
-      "explanation": "Certifications often require meeting mechanical durability standards."
+      "explanation": "Stable supply voltage supports reliable output signals, especially for analog and digital communication protocols."
     }
   ],
   "key_insights": [
-    "No product fully meets the high pressure range requirement of 15000 psi; Rosemount 3051S and SITRANS P320/P420 come closest but still fall short.",
-    "Rosemount 3051S excels in accuracy and temperature range, making it suitable for custody transfer and high temperature applications, but lacks explicit certifications and corrosion resistance details.",
-    "Output signal support with 4-20 mA and HART protocol is strong across all products, supporting remote diagnostics and maintainability to some extent.",
-    "Certification and corrosion resistance information is generally lacking, representing a potential risk area for customers requiring compliance with industry standards.",
-    "Long-term stability data is not explicitly provided for any product, making it difficult to fully assess suitability for applications requiring minimal drift."
+    "Accuracy and pressure range are the most critical specifications directly influencing key customer needs, with strong interdependencies.",
+    "None of the evaluated products explicitly address corrosion resistance, ingress protection, mechanical robustness, or certifications, indicating potential areas for product differentiation.",
+    "Output signal capabilities are well met by all products, with EJA510E offering the broadest communication protocol support.",
+    "Temperature range limitations in all products suggest an opportunity for innovation to meet wider operating conditions."
   ],
   "products": {
-    "Rosemount 3051S": {
-      "pressure_range": "0.5 to 4000 psi (varies by model)",
-      "accuracy": "\u00b10.025% span accuracy (Ultra)",
-      "output_signal": "4-20 mA HART, WirelessHART, FOUNDATION Fieldbus",
-      "temperature_range": "-328 to 1562 \u00b0F (-200 to 850 \u00b0C) with RTD input",
+    "Rosemount 3051": {
+      "pressure_range": "0-6000 psi",
+      "accuracy": "\u00b10.04%",
+      "output_signal": "4-20mA HART",
+      "temperature_range": "-40 to 85\u00b0C",
       "supply_voltage": "10.5-42.4 VDC",
-      "process_connection": "1/2 NPT, manifold or seal system options"
+      "process_connection": "1/4 NPT"
     },
-    "2600T Series Model 265J": {
-      "pressure_range": "10 mbar to 100 bar (approx. 0.15 to 1450 psi)",
-      "accuracy": "\u00b10.075%",
-      "output_signal": "4-20 mA, HART, PROFIBUS-PA",
-      "temperature_range": "-40 to 85 \u00b0C",
-      "supply_voltage": "12-42 VDC"
+    "EJA510E": {
+      "pressure_range": "-14.5 to 7200 psi",
+      "output_signal": "4-20mA HART, BRAIN, FOUNDATION Fieldbus, PROFIBUS PA",
+      "temperature_range": "-50 to 60\u00b0C",
+      "supply_voltage": "21.6 to 32 V DC"
     },
-    "EJA510E/EJA530E": {
-      "pressure_range": "-14.5 to 7200 psi (varies by model)",
-      "accuracy": "\u00b10.055% of span",
-      "output_signal": "4-20 mA HART, FOUNDATION Fieldbus, PROFIBUS PA",
-      "temperature_range": "-40 to 120 \u00b0C",
-      "supply_voltage": "10.5-32 VDC"
-    },
-    "SITRANS P320/P420": {
-      "pressure_range": "0.15 to 10153 psi (0.01 to 700 bar)",
-      "accuracy": "Minimal conformity error (typically \u00b10.04% to \u00b10.1%)",
-      "output_signal": "4-20 mA HART, FOUNDATION Fieldbus, PROFIBUS PA",
-      "temperature_range": "-40 to 85 \u00b0C",
-      "supply_voltage": "10.5-30 VDC",
-      "process_connection": "EN 1092-1, ASME B16.5, JIS flanges"
+    "SmartLine ST700": {
+      "pressure_range": "0-10000 psi",
+      "accuracy": "\u00b10.065%",
+      "output_signal": "4-20mA HART",
+      "temperature_range": "-40 to 85\u00b0C",
+      "supply_voltage": "10.5-42.4 VDC"
     }
   },
-  "generated_at": "2026-03-14T15:33:25.215370"
+  "generated_at": "2026-04-14T21:05:45.139328"
 }

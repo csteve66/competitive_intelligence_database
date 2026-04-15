@@ -7,6 +7,8 @@ USAGE:
     python main.py --competitors 3              # 3 competitors
     python main.py --iterations 15              # limit to 15 agent iterations
     python main.py --industry "oil and gas"    # specific industry
+    python main.py --allowed-domains emerson.com siemens.com
+    python main.py --allowed-source-types datasheet documentation
     python main.py --streamlit                  # Launch dashboard
 """
 
@@ -22,6 +24,18 @@ def main():
     parser.add_argument("--competitors", type=int, default=5, help="Number of competitors (max 10)")
     parser.add_argument("--industry", type=str, default="process industries", help="Target industry (e.g., 'oil and gas', 'chemical processing')")
     parser.add_argument("--iterations", type=int, default=25, help="Max agent iterations (default 25)")
+    parser.add_argument(
+        "--allowed-domains",
+        nargs="+",
+        default=None,
+        help="Restrict research to these domains (space-separated).",
+    )
+    parser.add_argument(
+        "--allowed-source-types",
+        nargs="+",
+        default=None,
+        help="Restrict research to source categories (datasheet, documentation, manual, news, blog, report, marketplace, regulatory).",
+    )
     parser.add_argument("--incremental", action="store_true", help="Keep existing data")
     
     args = parser.parse_args()
@@ -38,6 +52,8 @@ def main():
         max_competitors=min(args.competitors, 10),
         industry=args.industry,
         max_iterations=args.iterations,
+        allowed_domains=args.allowed_domains,
+        allowed_source_types=args.allowed_source_types,
         incremental=args.incremental,
     )
     
