@@ -9,6 +9,7 @@ USAGE:
     python main.py --industry "oil and gas"    # specific industry
     python main.py --allowed-domains emerson.com siemens.com
     python main.py --allowed-source-types datasheet documentation
+    python main.py --multi-agent               # supervisor-worker architecture
     python main.py --streamlit                  # Launch dashboard
 """
 
@@ -37,6 +38,11 @@ def main():
         help="Restrict research to source categories (datasheet, documentation, manual, news, blog, report, marketplace, regulatory).",
     )
     parser.add_argument("--incremental", action="store_true", help="Keep existing data")
+    parser.add_argument(
+        "--multi-agent",
+        action="store_true",
+        help="Use supervisor-worker multi-agent architecture",
+    )
     
     args = parser.parse_args()
     
@@ -55,6 +61,7 @@ def main():
         allowed_domains=args.allowed_domains,
         allowed_source_types=args.allowed_source_types,
         incremental=args.incremental,
+        multi_agent=args.multi_agent,
     )
     
     # Summary

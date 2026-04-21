@@ -317,6 +317,7 @@ def run_pipeline(
     allowed_domains: List[str] | None = None,
     allowed_source_types: List[str] | None = None,
     incremental: bool = False,
+    multi_agent: bool = False,
 ) -> Dict[str, Any]:
     """
     Run the AGENTIC pipeline.
@@ -351,6 +352,7 @@ def run_pipeline(
         max_iterations=max_iterations,
         allowed_domains=allowed_domains,
         allowed_source_types=allowed_source_types,
+        multi_agent=multi_agent,
     )
     
     # Write directly to Neo4j

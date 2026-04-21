@@ -26,7 +26,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolNode
+from langgraph.prebuilt import ToolNode, create_react_agent
 from tavily import TavilyClient
 
 from src.config.settings import get_openai_api_key, get_tavily_api_key
@@ -1878,6 +1878,91 @@ def build_graph() -> StateGraph:
     return graph.compile()
 
 
+def build_supervisor_graph(industry: str, max_competitors: int):
+    """
+    Build a supervisor-worker multi-agent graph using langgraph-supervisor.
+
+    The supervisor orchestrates four phase-specific workers:
+    1) Competitor researcher
+    2) Segments researcher
+    3) Needs analyst
+    4) QFD analyst
+    """
+    try:
+        from langgraph_supervisor import create_supervisor
+    except ImportError as exc:
+        raise ImportError(
+            "Missing dependency 'langgraph-supervisor'. "
+            "Install it with: pip install langgraph-supervisor"
+        ) from exc
+
+    llm = get_llm()
+
+    competitor_researcher = create_react_agent(
+        model=llm,
+        tools=[search_web, extract_page_content, save_competitor, save_product],
+        name="agent_competitor_researcher",
+        prompt=(
+            "You are Agent Competitor Researcher.\n"
+            "Your scope is ONLY competitor and product discovery.\n"
+            "Use tools in this sequence: search_web -> extract_page_content -> save_competitor/save_product.\n"
+            f"Target up to {max_competitors} competitors in {industry}.\n"
+            "Never call tools outside your assigned list."
+        ),
+    )
+
+    segments_researcher = create_react_agent(
+        model=llm,
+        tools=[research_customer_segments, map_segments_to_products],
+        name="agent_segments_researcher",
+        prompt=(
+            "You are Agent Segments Researcher.\n"
+            "Research customer segments and map them to available products.\n"
+            "If segments already exist, focus on completing product mappings.\n"
+            "Never call tools outside your assigned list."
+        ),
+    )
+
+    needs_analyst = create_react_agent(
+        model=llm,
+        tools=[research_industry_needs, map_needs_from_report],
+        name="agent_needs_analyst",
+        prompt=(
+            "You are Agent Needs Analyst.\n"
+            "Generate an industry needs report and map needs to saved products.\n"
+            "Always run report generation before attempting mappings.\n"
+            "Never call tools outside your assigned list."
+        ),
+    )
+
+    qfd_analyst = create_react_agent(
+        model=llm,
+        tools=[generate_house_of_quality],
+        name="agent_qfd_analyst",
+        prompt=(
+            "You are Agent QFD Analyst.\n"
+            "Generate the House of Quality once customer needs and mappings are available.\n"
+            "Never call tools outside your assigned list."
+        ),
+    )
+
+    supervisor = create_supervisor(
+        [competitor_researcher, segments_researcher, needs_analyst, qfd_analyst],
+        model=llm,
+        prompt=(
+            "You are the supervisor agent for a 4-phase competitive intelligence pipeline.\n"
+            "Delegate work in strict order and only move to next phase after prior phase is complete.\n"
+            "Phase 1: Agent Competitor Researcher\n"
+            "Phase 2: Agent Segments Researcher\n"
+            "Phase 3: Agent Needs Analyst\n"
+            "Phase 4: Agent QFD Analyst\n"
+            "Completion criteria: competitors+products saved, segments mapped, needs mapped, and House of Quality generated.\n"
+            "When all phases are complete, provide a brief final completion message."
+        ),
+    )
+    return supervisor.compile()
+
+
 # =============================================================================
 # RUN THE AGENT
 # =============================================================================
@@ -1888,6 +1973,7 @@ def run_agent(
     max_iterations: int = 25,
     allowed_domains: List[str] | None = None,
     allowed_source_types: List[str] | None = None,
+    multi_agent: bool = False,
 ) -> Dict[str, Any]:
     """
     Run the LangGraph agentic pipeline.
@@ -1914,8 +2000,13 @@ def run_agent(
     
     print("="*60)
     print("🤖 LANGGRAPH AGENTIC COMPETITIVE INTELLIGENCE")
-    print("    Built with LangGraph StateGraph")
-    print("    The agent DECIDES what to do via tool calls")
+    if multi_agent:
+        print("    Mode: Supervisor-worker multi-agent")
+        print("    Built with langgraph-supervisor + create_react_agent")
+    else:
+        print("    Mode: Original single-agent architecture")
+        print("    Built with LangGraph StateGraph")
+        print("    The agent DECIDES what to do via tool calls")
     print(f"    Max competitors: {MAX_COMPETITORS}")
     print(f"    Max iterations: {MAX_ITERATIONS}")
     print(f"    Industry: {industry}")
@@ -1926,7 +2017,11 @@ def run_agent(
     start = datetime.now()
     
     # Build the graph
-    graph = build_graph()
+    graph = (
+        build_supervisor_graph(industry=industry, max_competitors=MAX_COMPETITORS)
+        if multi_agent
+        else build_graph()
+    )
     
     # Initial state with industry context
     initial_state: AgentState = {
@@ -1936,9 +2031,11 @@ def run_agent(
 
 Tasks:
 1. Find up to {MAX_COMPETITORS} competitors with their products and specs
-2. Research customer needs specific to {industry}
-3. Map customer needs to product specifications
-4. Respect source selection rules: {_source_selection_summary()}
+2. Research customer segments specific to {industry} and map products to segments
+3. Research customer needs specific to {industry}
+4. Map customer needs to product specifications
+5. Generate a House of Quality matrix
+6. Respect source selection rules: {_source_selection_summary()}
 
 Start now.""")
         ],
