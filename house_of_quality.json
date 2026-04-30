@@ -1,459 +1,194 @@
 {
   "whats": [
     {
-      "id": "High Measurement Accuracy better than \u00b10.1% of full scale",
-      "name": "High Measurement Accuracy better than \u00b10.1% of full scale",
-      "threshold": "\u00b10.1%",
+      "id": "Minimal drift over time; recalibration intervals extended from weekly to quarterly (e.g., recalibration every 3 months with BD|SENSORS DMK 351P series",
+      "name": "Minimal drift over time; recalibration intervals extended from weekly to quarterly (e.g., recalibration every 3 months with BD|SENSORS DMK 351P series",
+      "threshold": "recalibration every 3 months",
       "spec_type": "accuracy",
       "description": ""
     },
     {
-      "id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
-      "name": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
-      "threshold": "\u226510,000 psi",
+      "id": "Suitable for automotive manufacturing and EV system pressures; exact ranges vary by application but must cover typical EV system pressures reliably",
+      "name": "Suitable for automotive manufacturing and EV system pressures; exact ranges vary by application but must cover typical EV system pressures reliably",
+      "threshold": "typical EV system pressures",
       "spec_type": "pressure_range",
       "description": ""
     },
     {
-      "id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
-      "name": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
-      "threshold": "-40\u00b0C to +85\u00b0C",
+      "id": "Operate reliably under automotive environmental stresses including temperature fluctuations and vibration",
+      "name": "Operate reliably under automotive environmental stresses including temperature fluctuations and vibration",
+      "threshold": "automotive environmental stresses",
       "spec_type": "temperature_range",
       "description": ""
     },
     {
-      "id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-      "name": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-      "threshold": "corrosion-resistant materials",
-      "spec_type": "certification_/_material",
-      "description": ""
-    },
-    {
-      "id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-      "name": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-      "threshold": "4-20 mA with HART or digital",
-      "spec_type": "output_signal",
-      "description": ""
-    },
-    {
-      "id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-      "name": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-      "threshold": "ATEX, IECEx or equivalent",
+      "id": "Materials and design must withstand corrosive environments encountered in manufacturing and vehicle operation",
+      "name": "Materials and design must withstand corrosive environments encountered in manufacturing and vehicle operation",
+      "threshold": "corrosion resistance",
       "spec_type": "certification",
       "description": ""
     },
     {
-      "id": "Resistance to Mechanical Vibrations and Shock rugged design",
-      "name": "Resistance to Mechanical Vibrations and Shock rugged design",
-      "threshold": "rugged design",
-      "spec_type": "certification_/_design",
+      "id": "Stable electrical signals with minimal interference; proper grounding and wiring to avoid signal loss or fluctuation",
+      "name": "Stable electrical signals with minimal interference; proper grounding and wiring to avoid signal loss or fluctuation",
+      "threshold": "stable electrical signals with minimal interference",
+      "spec_type": "output_signal",
       "description": ""
     },
     {
-      "id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-      "name": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-      "threshold": "modular design, self-diagnostics",
-      "spec_type": "design_/_serviceability",
+      "id": "Quick identification and resolution of wiring, power, or sensor faults to reduce downtime",
+      "name": "Quick identification and resolution of wiring, power, or sensor faults to reduce downtime",
+      "threshold": "ease of troubleshooting and maintenance",
+      "spec_type": "maintenance",
       "description": ""
     },
     {
-      "id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-      "name": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-      "threshold": "<0.1% FS per year zero drift",
-      "spec_type": "accuracy_/_calibration",
-      "description": ""
-    },
-    {
-      "id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-      "name": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-      "threshold": "IP66 or higher",
-      "spec_type": "certification_/_design",
+      "id": "Rugged design to prevent sudden failure; enhanced longevity through proper installation and maintenance practices",
+      "name": "Rugged design to prevent sudden failure; enhanced longevity through proper installation and maintenance practices",
+      "threshold": "long service life",
+      "spec_type": "service_life",
       "description": ""
     }
   ],
-  "hows": [
-    "output_signal",
-    "supply_voltage",
-    "pressure_range",
-    "temperature_range",
-    "accuracy",
-    "process_connection"
-  ],
+  "hows": [],
   "matrix": [
     {
-      "need_id": "High Measurement Accuracy better than \u00b10.1% of full scale",
-      "need_name": "High Measurement Accuracy better than \u00b10.1% of full scale",
+      "need_id": "Minimal drift over time; recalibration intervals extended from weekly to quarterly (e.g., recalibration every 3 months with BD|SENSORS DMK 351P series",
+      "need_name": "Minimal drift over time; recalibration intervals extended from weekly to quarterly (e.g., recalibration every 3 months with BD|SENSORS DMK 351P series",
       "relationships": {
         "accuracy": 9,
-        "accuracy_/_calibration": 3
+        "service_life": 3,
+        "maintenance": 1
       },
-      "reasoning": "Accuracy and calibration specifications directly determine the measurement precision and stability, which are critical to meeting the accuracy threshold."
+      "reasoning": "Accuracy directly impacts drift and recalibration frequency. Service life affects how long the sensor maintains performance. Maintenance ease can influence recalibration downtime."
     },
     {
-      "need_id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
-      "need_name": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
+      "need_id": "Suitable for automotive manufacturing and EV system pressures; exact ranges vary by application but must cover typical EV system pressures reliably",
+      "need_name": "Suitable for automotive manufacturing and EV system pressures; exact ranges vary by application but must cover typical EV system pressures reliably",
       "relationships": {
         "pressure_range": 9,
-        "process_connection": 1
+        "certification": 3
       },
-      "reasoning": "Pressure range specification defines the maximum measurable pressure, while process connection may influence pressure handling capability."
+      "reasoning": "Pressure range specification must cover EV system pressures. Certification ensures compliance with automotive standards relevant to pressure handling."
     },
     {
-      "need_id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
-      "need_name": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
+      "need_id": "Operate reliably under automotive environmental stresses including temperature fluctuations and vibration",
+      "need_name": "Operate reliably under automotive environmental stresses including temperature fluctuations and vibration",
       "relationships": {
         "temperature_range": 9,
-        "design_/_serviceability": 1
+        "certification": 3,
+        "service_life": 3
       },
-      "reasoning": "Temperature range specification directly impacts operational temperature limits; design features may support robustness."
+      "reasoning": "Temperature range and certification ensure sensor reliability under automotive conditions. Service life relates to durability under stress."
     },
     {
-      "need_id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-      "need_name": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-      "relationships": {
-        "certification_/_material": 9,
-        "certification_/_design": 3
-      },
-      "reasoning": "Material certifications and design features ensure corrosion and chemical resistance."
-    },
-    {
-      "need_id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-      "need_name": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-      "relationships": {
-        "output_signal": 9,
-        "supply_voltage": 3
-      },
-      "reasoning": "Output signal type is critical for communication reliability; supply voltage affects signal stability."
-    },
-    {
-      "need_id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-      "need_name": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
+      "need_id": "Materials and design must withstand corrosive environments encountered in manufacturing and vehicle operation",
+      "need_name": "Materials and design must withstand corrosive environments encountered in manufacturing and vehicle operation",
       "relationships": {
         "certification": 9,
-        "certification_/_design": 3
+        "service_life": 3
       },
-      "reasoning": "Certifications ensure compliance with hazardous area standards; design features support certification."
+      "reasoning": "Certification often includes corrosion resistance standards. Service life is affected by material durability in corrosive environments."
     },
     {
-      "need_id": "Resistance to Mechanical Vibrations and Shock rugged design",
-      "need_name": "Resistance to Mechanical Vibrations and Shock rugged design",
+      "need_id": "Stable electrical signals with minimal interference; proper grounding and wiring to avoid signal loss or fluctuation",
+      "need_name": "Stable electrical signals with minimal interference; proper grounding and wiring to avoid signal loss or fluctuation",
       "relationships": {
-        "certification_/_design": 9,
-        "design_/_serviceability": 3
+        "output_signal": 9,
+        "maintenance": 3
       },
-      "reasoning": "Rugged design and certification-related design features provide mechanical resistance."
+      "reasoning": "Output signal quality directly affects signal stability. Maintenance ease helps quickly resolve wiring or grounding issues."
     },
     {
-      "need_id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-      "need_name": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
+      "need_id": "Quick identification and resolution of wiring, power, or sensor faults to reduce downtime",
+      "need_name": "Quick identification and resolution of wiring, power, or sensor faults to reduce downtime",
       "relationships": {
-        "design_/_serviceability": 9,
-        "certification_/_design": 1
+        "maintenance": 9,
+        "output_signal": 3
       },
-      "reasoning": "Modular design and self-diagnostics directly impact maintenance and troubleshooting ease."
+      "reasoning": "Maintenance features enable fast fault detection and resolution. Output signal monitoring can assist in fault identification."
     },
     {
-      "need_id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-      "need_name": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
+      "need_id": "Rugged design to prevent sudden failure; enhanced longevity through proper installation and maintenance practices",
+      "need_name": "Rugged design to prevent sudden failure; enhanced longevity through proper installation and maintenance practices",
       "relationships": {
-        "accuracy_/_calibration": 9,
-        "accuracy": 3
+        "service_life": 9,
+        "maintenance": 3,
+        "certification": 1
       },
-      "reasoning": "Calibration and accuracy specifications influence zero drift and long-term stability."
-    },
-    {
-      "need_id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-      "need_name": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-      "relationships": {
-        "certification_/_design": 9,
-        "certification_/_material": 3
-      },
-      "reasoning": "Ingress protection ratings are tied to design and material certifications."
+      "reasoning": "Service life reflects ruggedness and longevity. Maintenance supports sustained operation. Certification may include ruggedness standards."
     }
   ],
   "competitive_scores": [
     {
-      "product": "2600T Series Pressure Transmitters Model 262HS/262NS",
+      "product": "Model Y",
       "scores": [
         {
-          "need_id": "High Measurement Accuracy better than \u00b10.1% of full scale",
+          "need_id": "Minimal drift over time; recalibration intervals extended from weekly to quarterly (e.g., recalibration every 3 months with BD|SENSORS DMK 351P series",
           "score": 3,
-          "reason": "Score = 3 because accuracy = \u00b10.15% is close to required \u00b10.1%."
+          "reason": "Score = 3 because accuracy = \u00b10.5% FS close to required recalibration every 3 months threshold."
         },
         {
-          "need_id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
+          "need_id": "Suitable for automotive manufacturing and EV system pressures; exact ranges vary by application but must cover typical EV system pressures reliably",
+          "score": 4,
+          "reason": "Score = 4 because pressure_range = 0-350 bar meets required typical EV system pressures."
+        },
+        {
+          "need_id": "Operate reliably under automotive environmental stresses including temperature fluctuations and vibration",
           "score": 3,
-          "reason": "Score = 3 because pressure_range = up to 65MPa (9400 psi) is close to required \u226510,000 psi."
+          "reason": "Score = 3 because temperature_range = -40\u00b0C to 85\u00b0C close to required automotive environmental stresses."
         },
         {
-          "need_id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
+          "need_id": "Materials and design must withstand corrosive environments encountered in manufacturing and vehicle operation",
           "score": 2,
-          "reason": "Score = 2 because temperature_range = -20 to +70\u00b0C is below required -40\u00b0C to +85\u00b0C."
+          "reason": "Score = 2 because certification = IP65 below ideal corrosion resistance threshold."
         },
         {
-          "need_id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-          "score": 1,
-          "reason": "Score = 1 because no corrosion-resistant material info provided, below required corrosion-resistant materials."
-        },
-        {
-          "need_id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-          "score": 1,
-          "reason": "Score = 1 because no output_signal info provided, below required 4-20 mA with HART or digital."
-        },
-        {
-          "need_id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided, below required ATEX, IECEx or equivalent."
-        },
-        {
-          "need_id": "Resistance to Mechanical Vibrations and Shock rugged design",
-          "score": 1,
-          "reason": "Score = 1 because no rugged design info provided, below required rugged design."
-        },
-        {
-          "need_id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-          "score": 1,
-          "reason": "Score = 1 because no modular design or self-diagnostics info provided, below required features."
-        },
-        {
-          "need_id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-          "score": 1,
-          "reason": "Score = 1 because no zero drift or calibration info provided, below required <0.1% FS per year zero drift."
-        },
-        {
-          "need_id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-          "score": 1,
-          "reason": "Score = 1 because no IP rating info provided, below required IP66 or higher."
-        }
-      ],
-      "overall_assessment": "2600T Series offers moderate accuracy and pressure range but lacks in temperature range, certifications, and advanced features."
-    },
-    {
-      "product": "Rosemount 3051 Pressure Transmitter",
-      "scores": [
-        {
-          "need_id": "High Measurement Accuracy better than \u00b10.1% of full scale",
-          "score": 5,
-          "reason": "Score = 5 because accuracy = 0.04% of span exceeds required \u00b10.1%."
-        },
-        {
-          "need_id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
+          "need_id": "Stable electrical signals with minimal interference; proper grounding and wiring to avoid signal loss or fluctuation",
           "score": 4,
-          "reason": "Score = 4 because pressure_range = up to 10000 psi meets required \u226510,000 psi."
+          "reason": "Score = 4 because output_signal = 4-20mA current loop meets required stable electrical signals with minimal interference."
         },
         {
-          "need_id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
+          "need_id": "Quick identification and resolution of wiring, power, or sensor faults to reduce downtime",
           "score": 2,
-          "reason": "Score = 2 because no temperature_range info provided, below required -40\u00b0C to +85\u00b0C."
+          "reason": "Score = 2 because maintenance = basic fault indicators falls short of ease of troubleshooting and maintenance threshold."
         },
         {
-          "need_id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-          "score": 1,
-          "reason": "Score = 1 because no corrosion-resistant material info provided, below required corrosion-resistant materials."
-        },
-        {
-          "need_id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA with HART meets required 4-20 mA with HART or digital."
-        },
-        {
-          "need_id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided, below required ATEX, IECEx or equivalent."
-        },
-        {
-          "need_id": "Resistance to Mechanical Vibrations and Shock rugged design",
-          "score": 1,
-          "reason": "Score = 1 because no rugged design info provided, below required rugged design."
-        },
-        {
-          "need_id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-          "score": 1,
-          "reason": "Score = 1 because no modular design or self-diagnostics info provided, below required features."
-        },
-        {
-          "need_id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-          "score": 1,
-          "reason": "Score = 1 because no zero drift or calibration info provided, below required <0.1% FS per year zero drift."
-        },
-        {
-          "need_id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-          "score": 1,
-          "reason": "Score = 1 because no IP rating info provided, below required IP66 or higher."
+          "need_id": "Rugged design to prevent sudden failure; enhanced longevity through proper installation and maintenance practices",
+          "score": 3,
+          "reason": "Score = 3 because service_life = 5 years close to long service life threshold."
         }
       ],
-      "overall_assessment": "Rosemount 3051 excels in accuracy, pressure range, and output signal but lacks temperature range and certifications."
-    },
-    {
-      "product": "EJA110E Differential Pressure Transmitter",
-      "scores": [
-        {
-          "need_id": "High Measurement Accuracy better than \u00b10.1% of full scale",
-          "score": 5,
-          "reason": "Score = 5 because accuracy = \u00b10.04% of span exceeds required \u00b10.1%."
-        },
-        {
-          "need_id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
-          "score": 2,
-          "reason": "Score = 2 because pressure_range = up to 14 MPa (2000 psi) falls short of required \u226510,000 psi."
-        },
-        {
-          "need_id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
-          "score": 5,
-          "reason": "Score = 5 because temperature_range = -40 to 85\u00b0C meets required -40\u00b0C to +85\u00b0C."
-        },
-        {
-          "need_id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-          "score": 1,
-          "reason": "Score = 1 because no corrosion-resistant material info provided, below required corrosion-resistant materials."
-        },
-        {
-          "need_id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20 mA DC with HART, FOUNDATION Fieldbus, PROFIBUS PA meets required 4-20 mA with HART or digital."
-        },
-        {
-          "need_id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided, below required ATEX, IECEx or equivalent."
-        },
-        {
-          "need_id": "Resistance to Mechanical Vibrations and Shock rugged design",
-          "score": 1,
-          "reason": "Score = 1 because no rugged design info provided, below required rugged design."
-        },
-        {
-          "need_id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-          "score": 1,
-          "reason": "Score = 1 because no modular design or self-diagnostics info provided, below required features."
-        },
-        {
-          "need_id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-          "score": 1,
-          "reason": "Score = 1 because no zero drift or calibration info provided, below required <0.1% FS per year zero drift."
-        },
-        {
-          "need_id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-          "score": 1,
-          "reason": "Score = 1 because no IP rating info provided, below required IP66 or higher."
-        }
-      ],
-      "overall_assessment": "EJA110E offers excellent accuracy, temperature range, and output signal but limited pressure range and lacks certifications."
-    },
-    {
-      "product": "SmartLine ST700",
-      "scores": [
-        {
-          "need_id": "High Measurement Accuracy better than \u00b10.1% of full scale",
-          "score": 5,
-          "reason": "Score = 5 because accuracy = \u00b10.065% exceeds required \u00b10.1%."
-        },
-        {
-          "need_id": "Wide Pressure Range Capability up to at least 10,000 psi (690 bar)",
-          "score": 4,
-          "reason": "Score = 4 because pressure_range = 0-10000 psi meets required \u226510,000 psi."
-        },
-        {
-          "need_id": "Robust Temperature Range from -40\u00b0C to +85\u00b0C",
-          "score": 5,
-          "reason": "Score = 5 because temperature_range = -40 to 85\u00b0C meets required -40\u00b0C to +85\u00b0C."
-        },
-        {
-          "need_id": "Corrosion and Chemical Resistance with corrosion-resistant materials",
-          "score": 1,
-          "reason": "Score = 1 because no corrosion-resistant material info provided, below required corrosion-resistant materials."
-        },
-        {
-          "need_id": "Reliable Output Signal Standardized 4-20 mA analog output with HART or digital protocols",
-          "score": 5,
-          "reason": "Score = 5 because output_signal = 4-20mA HART meets required 4-20 mA with HART or digital."
-        },
-        {
-          "need_id": "Certification for Hazardous Areas ATEX, IECEx, or equivalent",
-          "score": 1,
-          "reason": "Score = 1 because no certification info provided, below required ATEX, IECEx or equivalent."
-        },
-        {
-          "need_id": "Resistance to Mechanical Vibrations and Shock rugged design",
-          "score": 1,
-          "reason": "Score = 1 because no rugged design info provided, below required rugged design."
-        },
-        {
-          "need_id": "Low Maintenance and Easy Troubleshooting modular design, self-diagnostics",
-          "score": 1,
-          "reason": "Score = 1 because no modular design or self-diagnostics info provided, below required features."
-        },
-        {
-          "need_id": "Stable Zero and Span Over Time minimal zero drift (<0.1% FS per year)",
-          "score": 1,
-          "reason": "Score = 1 because no zero drift or calibration info provided, below required <0.1% FS per year zero drift."
-        },
-        {
-          "need_id": "Moisture and Dust Protection IP66 or higher ingress protection rating",
-          "score": 1,
-          "reason": "Score = 1 because no IP rating info provided, below required IP66 or higher."
-        }
-      ],
-      "overall_assessment": "SmartLine ST700 provides excellent accuracy, pressure and temperature range, and output signal but lacks certifications and ruggedness features."
+      "overall_assessment": "Model Y generally meets key automotive and EV pressure requirements with good signal stability but shows room for improvement in corrosion resistance and maintenance features."
     }
   ],
   "technical_correlations": [
     {
       "spec1": "accuracy",
-      "spec2": "accuracy_/_calibration",
+      "spec2": "service_life",
       "correlation": "positive",
-      "explanation": "Higher accuracy specifications are supported by better calibration stability, reducing zero drift over time."
+      "explanation": "Higher accuracy sensors tend to require better materials and design, which also enhance service life."
     },
     {
       "spec1": "pressure_range",
-      "spec2": "process_connection",
+      "spec2": "certification",
       "correlation": "positive",
-      "explanation": "Process connection design can influence the maximum pressure the transmitter can safely handle."
+      "explanation": "Pressure range capabilities often align with certifications ensuring safety and compliance in automotive environments."
     },
     {
       "spec1": "output_signal",
-      "spec2": "supply_voltage",
+      "spec2": "maintenance",
       "correlation": "positive",
-      "explanation": "Stable supply voltage supports reliable output signal transmission and communication protocols."
-    },
-    {
-      "spec1": "certification",
-      "spec2": "certification_/_design",
-      "correlation": "positive",
-      "explanation": "Certifications for hazardous areas often require specific design features to ensure compliance."
+      "explanation": "Stable output signals facilitate easier fault detection and maintenance."
     }
   ],
   "key_insights": [
-    "Accuracy and calibration stability are critical and strongly interrelated specifications that directly impact customer satisfaction for measurement precision.",
-    "Most products meet or exceed accuracy and output signal requirements but commonly lack certifications for hazardous areas and rugged design features, representing a competitive gap.",
-    "Temperature range compliance varies, with some products not meeting the full -40\u00b0C to +85\u00b0C requirement, which may limit their applicability in harsh environments.",
-    "Process connection and supply voltage, while less emphasized, play supportive roles in enabling pressure range capability and output signal reliability."
+    "Accuracy and service life are critical and strongly interrelated specifications impacting sensor reliability and recalibration intervals.",
+    "Certification plays a dual role in ensuring corrosion resistance and compliance with automotive environmental standards.",
+    "Maintenance features and output signal stability are key enablers for reducing downtime through quick fault identification and resolution."
   ],
   "products": {
-    "2600T Series Pressure Transmitters Model 262HS/262NS": {
-      "pressure_range": "up to 65MPa (9400 psi)",
-      "accuracy": "\u00b10.15%",
-      "temperature_range": "-20 to +70\u00b0C (LCD indicators)"
-    },
-    "Rosemount 3051 Pressure Transmitter": {
-      "pressure_range": "up to 10000 psi",
-      "accuracy": "0.04% of span",
-      "output_signal": "4-20 mA with HART",
-      "process_connection": "Coplanar design with integral manifolds"
-    },
-    "EJA110E Differential Pressure Transmitter": {
-      "pressure_range": "up to 14 MPa (2000 psi)",
-      "accuracy": "\u00b10.04% of span",
-      "output_signal": "4-20 mA DC with HART, FOUNDATION Fieldbus, PROFIBUS PA",
-      "temperature_range": "-40 to 85\u00b0C"
-    },
-    "SmartLine ST700": {
-      "pressure_range": "0-10000 psi",
-      "accuracy": "\u00b10.065%",
-      "output_signal": "4-20mA HART",
-      "temperature_range": "-40 to 85\u00b0C",
-      "supply_voltage": "10.5-42.4 VDC"
-    }
+    "Model Y": {}
   },
-  "generated_at": "2026-04-21T01:54:00.932991"
+  "generated_at": "2026-04-29T21:39:50.134248"
 }

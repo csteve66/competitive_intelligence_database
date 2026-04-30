@@ -137,7 +137,10 @@ class ToolState:
             "allowed_domains": [],
             "allowed_source_types": [],
         }
+        self.target_company: str = "Honeywell"
+        self.product_category: str = "pressure transmitters"
         self.finished: bool = False
+        
     
     def summary(self) -> str:
         report_status = "✅ Generated" if self.industry_needs_report else "❌ Not yet"
@@ -333,6 +336,7 @@ def set_source_selection(
     return f"Source selection updated. {_source_selection_summary()}.{invalid_msg}"
 
 
+
 @tool
 def save_competitor(company_name: str, source_url: str) -> str:
     """
@@ -352,8 +356,8 @@ def save_competitor(company_name: str, source_url: str) -> str:
         return f"LIMIT REACHED: Already have {MAX_COMPETITORS} competitors. Focus on finding products for existing competitors."
     
     name = clean_string(company_name)
-    if not name or name.lower() == "honeywell":
-        return "Invalid competitor name or cannot add Honeywell as competitor."
+    if not name or name.lower() == _tool_state.target_company.lower():
+        return f"Invalid competitor name or cannot add {_tool_state.target_company} as a competitor."
     
     if name in _tool_state.competitors:
         return f"{name} is already saved as a competitor."
@@ -765,7 +769,7 @@ def research_industry_needs(industry: str) -> str:
     
     report_prompt = build_poml_prompt(
         role="Industry analyst",
-        objective="Write a comprehensive customer-needs report for pressure transmitters",
+        objective=f"Write a comprehensive customer-needs report for {_tool_state.product_category}",
         context={
             "industry": industry,
             "num_sources": len(sources_used),
@@ -1109,10 +1113,10 @@ def research_customer_segments(industry: str) -> str:
     # Step 1: LLM generates search queries
     query_prompt = build_poml_prompt(
         role="Market segmentation researcher",
-        objective="Generate search queries to identify customer segments for pressure transmitters",
+        objective=f"Generate search queries to identify customer segments for {_tool_state.product_category}",
         context={
             "industry": industry,
-            "domain": "pressure transmitters",
+            "domain": _tool_state.product_category,
         },
         instructions=[
             "Generate 4-5 search queries.",
@@ -1715,68 +1719,70 @@ TOOLS = [
     finish_research,
 ]
 
-
-# =============================================================================
-# SYSTEM PROMPT
-# =============================================================================
-
-SYSTEM_PROMPT = build_poml_prompt(
-    role="Competitive intelligence researcher for Honeywell pressure transmitters (SmartLine ST700)",
-    objective=(
-        "Research competitors and products, map customer segments and needs, "
-        "and produce a House of Quality matrix."
-    ),
-    context={
-        "goals": [
-            "Research Honeywell competitors and find products with specs.",
-            "Identify customer segments in the target industry and map products to them.",
-            "Generate an in-depth industry needs report from multiple sources.",
-            "Map customer needs to product specifications.",
-            "Build a House of Quality (QFD) matrix.",
-        ],
-        "tools_available": {
-            "competitor_product_research": [
-                "search_web: Search for information (returns URLs)",
-                "extract_page_content: Must be called to get content and store evidence in ChromaDB",
-                "save_competitor: Save competitor only after extracting a relevant page",
-                "save_product: Save product with specs only after extracting datasheet content",
+def build_system_prompt(company: str, product: str, product_category: str, industry: str) -> str:
+    return build_poml_prompt(
+        role=f"Competitive intelligence researcher for {company} {product_category} ({product})",
+        objective=(
+            f"Research {product_category} competitors to {company}'s {product}, "
+            "map customer segments and needs, and produce a House of Quality matrix."
+        ),
+        context={
+            "target_company": company,
+            "target_product": product,
+            "product_category": product_category,
+            "target_industry": industry,
+            "goals": [
+                f"Research {company} competitors and find {product_category} products with specs.",
+                "Identify customer segments in the target industry and map products to them.",
+                "Generate an in-depth industry needs report from multiple sources.",
+                "Map customer needs to product specifications.",
+                "Build a House of Quality (QFD) matrix.",
             ],
-            "market_research": [
-                "research_customer_segments: Find customer groups/segments with evidence",
-                "map_segments_to_products: Map products to customer segments",
-            ],
-            "customer_needs_research": [
-                "research_industry_needs: Search 8+ sources and generate in-depth needs report",
-                "map_needs_from_report: Extract needs from report and map to saved products",
-            ],
-            "quality_function_deployment": [
-                "generate_house_of_quality: Create QFD matrix from needs (WHATs) and specs (HOWs)",
-            ],
-            "utility": [
-                "set_source_selection: Restrict to specific domains and/or source types",
-                "get_current_progress: Check collection progress",
-                "finish_research: Signal completion",
+            "tools_available": {
+                "competitor_product_research": [
+                    "search_web: Search for information (returns URLs)",
+                    "extract_page_content: Must be called to get content and store evidence in ChromaDB",
+                    f"save_competitor: Save competitor only after extracting a relevant page (do NOT save {company})",
+                    "save_product: Save product with specs only after extracting datasheet content",
+                ],
+                "market_research": [
+                    "research_customer_segments: Find customer groups/segments with evidence",
+                    "map_segments_to_products: Map products to customer segments",
+                ],
+                "customer_needs_research": [
+                    "research_industry_needs: Search 8+ sources and generate in-depth needs report",
+                    "map_needs_from_report: Extract needs from report and map to saved products",
+                ],
+                "quality_function_deployment": [
+                    "generate_house_of_quality: Create QFD matrix from needs (WHATs) and specs (HOWs)",
+                ],
+                "utility": [
+                    "set_source_selection: Restrict to specific domains and/or source types",
+                    "get_current_progress: Check collection progress",
+                    "finish_research: Signal completion",
+                ],
+            },
+            "workflow_phases": [
+                f"Phase 1 - Competitors & Products: Find 3-5 competitors to {company}'s {product}, then for each use search_web -> extract_page_content -> save_competitor and search_web -> extract_page_content -> save_product.",
+                "Phase 2 - Customer Segments: After products exist, call research_customer_segments(industry), then map_segments_to_products().",
+                "Phase 3 - Customer Needs Report: Call research_industry_needs(industry), then map_needs_from_report().",
+                "Phase 4 - House of Quality: After needs are mapped, call generate_house_of_quality().",
             ],
         },
-        "workflow_phases": [
-            "Phase 1 - Competitors & Products: Find 3-5 competitors, then for each competitor use search_web -> extract_page_content -> save_competitor and search_web -> extract_page_content -> save_product. Get at least one product per competitor.",
-            "Phase 2 - Customer Segments: After products exist, call research_customer_segments(industry), then map_segments_to_products().",
-            "Phase 3 - Customer Needs Report: Call research_industry_needs(industry), then map_needs_from_report().",
-            "Phase 4 - House of Quality: After needs are mapped, call generate_house_of_quality().",
+        instructions=[
+            "Follow the workflow phases in order from Phase 1 to Phase 4.",
+            "Use tools proactively and ground extracted facts in stored evidence.",
+            "Prioritize complete, verifiable outputs over broad but unverified claims.",
         ],
-    },
-    instructions=[
-        "Follow the workflow phases in order from Phase 1 to Phase 4.",
-        "Use tools proactively and ground extracted facts in stored evidence.",
-        "Prioritize complete, verifiable outputs over broad but unverified claims.",
-    ],
-    constraints=[
-        "Do not skip required extraction before save_competitor or save_product.",
-        "Finish only when all required outputs are present.",
-        "Required outputs: at least 3 competitors with products, customer segments mapped to products, industry needs report, need-to-product mappings, and House of Quality matrix.",
-    ],
-    output_format="Operational execution via tool calls; begin with Phase 1 and progress sequentially.",
-)
+        constraints=[
+            "Do not skip required extraction before save_competitor or save_product.",
+            f"Do not save {company} as a competitor — it is the target company being researched.",
+            "Finish only when all required outputs are present.",
+            "Required outputs: at least 3 competitors with products, customer segments mapped to products, industry needs report, need-to-product mappings, and House of Quality matrix.",
+        ],
+        output_format="Operational execution via tool calls; begin with Phase 1 and progress sequentially.",
+    )
+
 
 
 # =============================================================================
@@ -1974,6 +1980,9 @@ def run_agent(
     allowed_domains: List[str] | None = None,
     allowed_source_types: List[str] | None = None,
     multi_agent: bool = False,
+    company: str = "Honeywell",
+    product: str = "SmartLine ST700",
+    product_category: str = "pressure transmitters",
 ) -> Dict[str, Any]:
     """
     Run the LangGraph agentic pipeline.
@@ -1989,6 +1998,8 @@ def run_agent(
     
     # Reset tool state
     _tool_state = ToolState()
+    _tool_state.target_company = company
+    _tool_state.product_category = product_category
     MAX_COMPETITORS = min(max_competitors, 10)
     MAX_ITERATIONS = max_iterations
     set_source_selection.invoke(
@@ -2010,6 +2021,7 @@ def run_agent(
     print(f"    Max competitors: {MAX_COMPETITORS}")
     print(f"    Max iterations: {MAX_ITERATIONS}")
     print(f"    Industry: {industry}")
+    print(f"    Target: {company} {product} ({product_category})")
     print(f"    Source selection: {_source_selection_summary()}")
     print("    📦 Evidence stored in ChromaDB for verification")
     print("="*60)
@@ -2023,11 +2035,14 @@ def run_agent(
         else build_graph()
     )
     
+    # Build dynamic system prompt
+    system_prompt = build_system_prompt(company, product, product_category, industry)
+    
     # Initial state with industry context
     initial_state: AgentState = {
         "messages": [
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=f"""Research Honeywell's competitors in pressure transmitters for the {industry} industry.
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=f"""Research {company}'s competitors in {product_category} for the {industry} industry. The target product is {product}.
 
 Tasks:
 1. Find up to {MAX_COMPETITORS} competitors with their products and specs
@@ -2049,27 +2064,20 @@ Start now.""")
         "finished": False,
     }
     
-    # Run the graph with recursion limit based on max_iterations
-    # Recursion limit needs to be higher than iterations (each iteration = 2 graph steps: agent + tools)
+    # Run the graph
     final_state = graph.invoke(
         initial_state,
         config={"recursion_limit": max_iterations * 2 + 10}
     )
     
-    # Add Honeywell baseline product
-    _tool_state.products["SmartLine ST700"] = {
-        "name": "SmartLine ST700",
-        "company": "Honeywell",
-        "source_url": "https://www.honeywellprocess.com",
+    # Add baseline/target product (configurable)
+    _tool_state.products[product] = {
+        "name": product,
+        "company": company,
+        "source_url": f"https://www.{company.lower().replace(' ', '')}.com",
         "evidence_ids": []
     }
-    _tool_state.specifications["SmartLine ST700"] = {
-        "pressure_range": "0-10000 psi",
-        "accuracy": "±0.065%",
-        "output_signal": "4-20mA HART",
-        "temperature_range": "-40 to 85°C",
-        "supply_voltage": "10.5-42.4 VDC"
-    }
+    _tool_state.specifications[product] = {}
     
     # AUTO-COMPLETE: If no customer segments, research them
     if _tool_state.products and not _tool_state.customer_segments:
@@ -2093,7 +2101,6 @@ Start now.""")
     if _tool_state.products and not _tool_state.industry_needs_report:
         print("\n⚠️  Iterations ended before customer needs research. Running automatically...")
         try:
-            # Call the tool function directly (not via agent)
             result = research_industry_needs.invoke({"industry": industry})
             print(f"   {result[:200]}...")
         except Exception as e:

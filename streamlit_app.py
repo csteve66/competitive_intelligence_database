@@ -693,7 +693,7 @@ def main():
     st.markdown("""
     <div class="main-header">
         <h1>🎯 Competitive Intelligence Database</h1>
-        <p>Competitive Intelligence for Pressure Transmitter Markets | Powered by Agentic AI</p>
+        <p>Competitive Intelligence Platform | Powered by Agentic AI</p>
     </div>
     """, unsafe_allow_html=True)
         
@@ -702,15 +702,21 @@ def main():
         st.markdown("### 🤖 Agentic Pipeline")
         st.markdown("Run the AI agent to collect competitive intelligence.")
         
-        target_product = st.text_input("Target Product", "SmartLine ST700")
+        # These must be OUTSIDE the button block
+        target_company = st.text_input("Target Company", "Honeywell", key="sidebar_company")
+        target_product = st.text_input("Target Product", "SmartLine ST700", key="sidebar_product")
+        product_category = st.text_input("Product Category", "pressure transmitters", key="sidebar_product_category")
         max_competitors = st.slider("Max Competitors", 1, 10, 5)
         max_iterations = st.slider("Max Iterations", 10, 50, 30)
         
-        if st.button("🚀 Run Agentic Pipeline", width="stretch"):
+        if st.button("🚀 Run Agentic Pipeline", use_container_width=True):
             with st.spinner("🤖 Agent is researching..."):
                 try:
                     from src.pipeline.graph_builder import run_pipeline
                     result = run_pipeline(
+                        company=target_company,
+                        target_product=target_product,
+                        product_category=product_category,
                         max_competitors=max_competitors,
                     )
                     st.success("✅ Pipeline complete!")

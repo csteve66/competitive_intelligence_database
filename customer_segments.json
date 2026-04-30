@@ -1,70 +1,285 @@
 {
   "segments": [
     {
-      "name": "Upstream Oil & Gas Operators",
-      "description": "Companies involved in exploration and production of oil and gas, requiring pressure transmitters for wellhead monitoring and remote locations.",
-      "evidence_text": "Primary applications for the low-power transmitter is in the upstream oil & gas industry. There, ABB transmitters are used to measure gauge pressure measurements on casing and tubing on well heads",
-      "source_url": "https://library.e.abb.com/public/f888877639e140d7b30d90014cca495a/SS_266HSH_LOW-EN_A_Q4_WEB.pdf",
+      "name": "Battery Electric Vehicle (BEV) Manufacturers and Battery Management Systems",
+      "description": "Manufacturers and system integrators focusing on battery thermal management, battery state monitoring, and safety in electric vehicles using pressure sensors to monitor battery pack conditions and detect thermal events.",
+      "evidence_text": "Pressure sensors in the battery pack provide valuable information of working pressures and unusual pressure increases as input for the Battery Management System. The pressure signature of a thermal event occurs faster than the local temperature increase, pressure sensors can accurately detect thermal events within sealed lithium ion battery cell earlier than temperature sensors alone.",
+      "source_url": "https://www.tdk-electronics.tdk.com/download/3018928/90fa2b93a3cd1653adb773763d467b2b/pressure-sensors-xev-pb.pdf",
       "evidence_ids": [
-        "chunk_590e968040f4_0_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_1_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_2_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_3_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_4_2026-04-21T05-51-00-069308"
+        "chunk_2119051ef65c_0_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_1_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_2_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_3_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_4_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_5_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_6_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_7_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_8_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_9_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_10_2026-04-30T01-37-35-222235"
       ],
-      "industry": "oil and gas"
+      "industry": "automotive"
+    },
+    {
+      "name": "Automotive HVAC and Heat Pump System Manufacturers",
+      "description": "Producers of heat pump and HVAC systems for electric vehicles that use combined pressure-temperature sensors for refrigerant cycle monitoring to enhance battery life and cabin comfort.",
+      "evidence_text": "Combined pressure-temperature sensors for refrigerant cycle monitoring of heat pump and HVAC systems.",
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive",
+      "evidence_ids": [
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
+      ],
+      "industry": "automotive"
+    },
+    {
+      "name": "Hybrid Electric Vehicle (HEV) and Internal Combustion Engine (ICE) Vehicle Manufacturers",
+      "description": "Vehicle manufacturers and system integrators using pressure sensors for advanced vehicle emission control, including fuel vapor and leakage control, fuel supply line monitoring, and exhaust emission control.",
+      "evidence_text": "Pressure sensors to support the Evaporative Emission Control System (EVAP), monitor fuel tank pressure and detect any leakage of hydrocarbons (HC). Pressure sensors to monitor and control the fuel pump. Pressure sensors to monitor the function of the positive crankcase ventilation system, secondary air pump or particulate filter loading (GPF/DPF).",
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive",
+      "evidence_ids": [
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
+      ],
+      "industry": "automotive"
+    },
+    {
+      "name": "Hydrogen Fuel Cell Electric Vehicle (FCEV) Manufacturers",
+      "description": "Manufacturers and integrators of hydrogen fuel cell vehicles requiring pressure sensors for hydrogen pressure control and fuel cell system monitoring.",
+      "evidence_text": "Pressure sensors for hydrogen fuel cell applications.",
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive",
+      "evidence_ids": [
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
+      ],
+      "industry": "automotive"
+    },
+    {
+      "name": "Electric Vehicle Anti-lock Braking System (ABS) Developers",
+      "description": "Developers and manufacturers of ABS systems in electric vehicles that utilize ceramic pressure sensors to monitor and regulate braking pressure for safety and efficiency.",
+      "evidence_text": "At the heart of the ABS system is the pressure sensor, specifically ceramic pressure sensors, which play a vital role in monitoring and regulating the braking pressure in EVs.",
+      "source_url": "https://www.winsen-sensor.com/knowledge/ceramic-pressure-sensors-in-electric-vehicle-abs.html",
+      "evidence_ids": [
+        "chunk_273ab65a9583_0_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_1_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_2_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_3_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_4_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_5_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_6_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_7_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_8_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_9_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_10_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_11_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_12_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_13_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_14_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_15_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_16_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_17_2026-04-30T01-37-38-596915"
+      ],
+      "industry": "automotive"
+    },
+    {
+      "name": "Automotive Propulsion System Sensor Users",
+      "description": "Users of sensors in all types of propulsion systems (conventional, hybrid, electric) for temperature, pressure, and position measurement to improve efficiency, reduce emissions, and enhance safety and comfort.",
+      "evidence_text": "Valeo\u2019s sensors address a wide range of applications in temperature, pressure and position measurement of all types of propulsion systems (conventional, hybrid and electric). The accuracy, fast response time and reliability of Valeo\u2019s sensors meet the highest expectations of our customers and regulations. They help reduce CO2 and pollutant emissions, improve safety and comfort.",
+      "source_url": "https://www.valeo.com/en/sensors-and-actuators-for-vehicles/",
+      "evidence_ids": [
+        "chunk_6183b6c6889f_0_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_1_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_2_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_3_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_4_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_5_2026-04-30T01-37-28-556696"
+      ],
+      "industry": "automotive"
     }
   ],
   "sources": [
-    "https://library.e.abb.com/public/f888877639e140d7b30d90014cca495a/SS_266HSH_LOW-EN_A_Q4_WEB.pdf",
-    "https://www.transmitters-pressure.com/news/best-pressure-transmitters-for-oil-gas-applications-230601.html",
-    "https://gp50.com/products/search-by-market/oil-gas/",
-    "https://www.noshok.com/support/support-tools-faq/application-insights/the-important-role-of-pressure-transmitters-in-the-oil-gas-industry/",
-    "https://www.fortunebusinessinsights.com/industry-reports/pressure-transmitter-market-101196",
-    "https://www.marketreportanalytics.com/reports/oil-and-gas-pressure-transmitter-340846",
     "https://www.marketsandmarkets.com/ResearchInsight/pressure-transmitters-market.asp",
-    "https://www.marketsandmarkets.com/PressReleases/pressure-transmitters.asp"
+    "https://blog.amphenol-sensors.com/blog/ev-heat-pumps-for-enhanced-battery-life",
+    "https://www.marketsandmarkets.com/ResearchInsight/pressure-sensor-market.asp",
+    "https://www.infineon.com/products/sensor/pressure-sensors",
+    "https://www.valeo.com/en/sensors-and-actuators-for-vehicles/",
+    "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive",
+    "https://www.tdk-electronics.tdk.com/download/3018928/90fa2b93a3cd1653adb773763d467b2b/pressure-sensors-xev-pb.pdf",
+    "https://www.winsen-sensor.com/knowledge/ceramic-pressure-sensors-in-electric-vehicle-abs.html"
   ],
   "segment_mappings": [
     {
-      "segment": "Upstream Oil & Gas Operators",
-      "product": "2600T Series Pressure Transmitters Model 262HS/262NS",
-      "reason": "Suitable for high-pressure wellhead monitoring with pressure range up to 65MPa (9400 psi) and temperature range -20 to +70\u00b0C, matching harsh remote lo",
+      "segment": "Battery Electric Vehicle (BEV) Manufacturers and Battery Management Systems",
+      "product": "Model Y",
+      "reason": "As an electric vehicle, Model Y incorporates advanced battery thermal management and battery state monitoring systems, making it relevant to BEV manuf",
       "evidence_ids": [
-        "chunk_590e968040f4_0_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_1_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_2_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_3_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_4_2026-04-21T05-51-00-069308"
+        "chunk_2119051ef65c_0_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_1_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_2_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_3_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_4_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_5_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_6_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_7_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_8_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_9_2026-04-30T01-37-35-222235",
+        "chunk_2119051ef65c_10_2026-04-30T01-37-35-222235"
       ],
-      "source_url": "https://library.e.abb.com/public/f888877639e140d7b30d90014cca495a/SS_266HSH_LOW-EN_A_Q4_WEB.pdf"
+      "source_url": "https://www.tdk-electronics.tdk.com/download/3018928/90fa2b93a3cd1653adb773763d467b2b/pressure-sensors-xev-pb.pdf"
     },
     {
-      "segment": "Upstream Oil & Gas Operators",
-      "product": "Rosemount 3051 Pressure Transmitter",
-      "reason": "Offers high accuracy (0.04% of span) and pressure range up to 10000 psi, with 4-20 mA HART output and integral manifolds, ideal for precise wellhead a",
+      "segment": "Automotive HVAC and Heat Pump System Manufacturers",
+      "product": "Model Y",
+      "reason": "Model Y features integrated HVAC and heat pump systems for cabin comfort and battery thermal management, aligning with the needs of manufacturers usin",
       "evidence_ids": [
-        "chunk_590e968040f4_0_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_1_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_2_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_3_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_4_2026-04-21T05-51-00-069308"
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
       ],
-      "source_url": "https://library.e.abb.com/public/f888877639e140d7b30d90014cca495a/SS_266HSH_LOW-EN_A_Q4_WEB.pdf"
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive"
     },
     {
-      "segment": "Upstream Oil & Gas Operators",
-      "product": "SmartLine ST700",
-      "reason": "Provides a wide pressure range (0-10000 psi), good accuracy (\u00b10.065%), and robust temperature tolerance (-40 to 85\u00b0C), suitable for upstream oil and g",
+      "segment": "Hybrid Electric Vehicle (HEV) and Internal Combustion Engine (ICE) Vehicle Manufacturers",
+      "product": "Model Y",
+      "reason": "Although Model Y is a BEV, Teslas technology and sensor integration can provide insights into advanced emission control and fuel system monitoring rel",
       "evidence_ids": [
-        "chunk_590e968040f4_0_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_1_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_2_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_3_2026-04-21T05-51-00-069308",
-        "chunk_590e968040f4_4_2026-04-21T05-51-00-069308"
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
       ],
-      "source_url": "https://library.e.abb.com/public/f888877639e140d7b30d90014cca495a/SS_266HSH_LOW-EN_A_Q4_WEB.pdf"
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive"
+    },
+    {
+      "segment": "Hydrogen Fuel Cell Electric Vehicle (FCEV) Manufacturers",
+      "product": "Model Y",
+      "reason": "Model Y does not use hydrogen fuel cell technology; therefore, it is not a suitable product for this segment.",
+      "evidence_ids": [
+        "chunk_609a8bea9dcf_0_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_1_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_2_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_3_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_4_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_5_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_6_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_7_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_8_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_9_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_10_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_11_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_12_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_13_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_14_2026-04-30T01-37-30-946859",
+        "chunk_609a8bea9dcf_15_2026-04-30T01-37-30-946859"
+      ],
+      "source_url": "https://www.tdk-electronics.tdk.com/en/3028876/solutions/pressure-sensors-for-automotive"
+    },
+    {
+      "segment": "Electric Vehicle Anti-lock Braking System (ABS) Developers",
+      "product": "Model Y",
+      "reason": "Model Y employs advanced ABS systems utilizing ceramic pressure sensors to monitor braking pressure, making it relevant for ABS developers in electric",
+      "evidence_ids": [
+        "chunk_273ab65a9583_0_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_1_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_2_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_3_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_4_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_5_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_6_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_7_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_8_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_9_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_10_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_11_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_12_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_13_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_14_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_15_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_16_2026-04-30T01-37-38-596915",
+        "chunk_273ab65a9583_17_2026-04-30T01-37-38-596915"
+      ],
+      "source_url": "https://www.winsen-sensor.com/knowledge/ceramic-pressure-sensors-in-electric-vehicle-abs.html"
+    },
+    {
+      "segment": "Automotive Propulsion System Sensor Users",
+      "product": "Model Y",
+      "reason": "Model Y integrates multiple sensors for temperature, pressure, and position measurement in its electric propulsion system, aligning with the needs of ",
+      "evidence_ids": [
+        "chunk_6183b6c6889f_0_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_1_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_2_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_3_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_4_2026-04-30T01-37-28-556696",
+        "chunk_6183b6c6889f_5_2026-04-30T01-37-28-556696"
+      ],
+      "source_url": "https://www.valeo.com/en/sensors-and-actuators-for-vehicles/"
     }
   ],
-  "industry": "oil and gas"
+  "industry": "automotive"
 }
